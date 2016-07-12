@@ -1,2 +1,2 @@
-qemu-system-i386 bin/boot_sector.bin
+qemu-system-i386 bin/main.bin
 del trace-*

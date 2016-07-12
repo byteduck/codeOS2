@@ -1,6 +1,6 @@
 @echo off
 cd asm
-nasm boot_sector.asm -f bin -o ../bin/boot_sector.bin
+nasm main.asm -f bin -o ../bin/main.bin
 pause
-qemu-system-i386 ../bin/boot_sector.bin
+qemu-system-i386 ../bin/main.bin
 del trace-*
