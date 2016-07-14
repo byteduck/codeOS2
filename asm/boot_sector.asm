@@ -25,7 +25,7 @@ kernel_load:
 	mov bx, KERNEL_LOAD_MSG
 	call print_string
 	
-	mov dh, 1            ;Load 1 sector
+	mov dh, 15            ;Load 15 sectors
 	mov bx, KERNEL_LOC    ;To KERNEL_LOC
 	mov dl, [BOOT_DRIVE]  ;From BOOT_DRIVE
 	call disk_load        ;Go!
