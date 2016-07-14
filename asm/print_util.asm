@@ -1,4 +1,4 @@
-print_string:
+print_string: ;Will only work in 16-bit mode
 	pusha
 	mov ah, 0x0e
 print_loop:
@@ -19,7 +19,7 @@ print_char:
 	popa
 	ret
 	
-print_hex:
+print_hex: ;Will only work in 16 bit mode
 	pusha
 
 	mov cx,4

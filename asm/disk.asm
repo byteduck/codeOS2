@@ -1,4 +1,5 @@
 disk_load: ;Loads DH sectors into ES:BX from drive DL
+              ;Only works in 16-bit mode
 push dx
 mov ah,0x02
 mov al,dh ;Read DH sectors
@@ -12,9 +13,7 @@ cmp dh,al ;Compare sectors expected vs sectors gotten
 jne disk_error
 ret
 
-disk_error :
+disk_error:
 mov bx , DISK_ERROR_MSG
 call print_string
 jmp $
-
-DISK_ERROR_MSG db "There was an error reading the disk!",0
