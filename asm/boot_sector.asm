@@ -10,6 +10,11 @@ call kernel_load
 
 mov bx, PM_START_MSG
 call print_string
+
+mov ah, 0x00
+mov al, 0x13
+int 0x10     ;Set video mode to 320*200 256-color
+
 call switch_pm
 
 jmp $
