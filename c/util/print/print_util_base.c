@@ -1,30 +1,11 @@
 int xpos = 0;
 int ypos = 0;
 char ccolor = 0x07;
-void putch_color(char c, char color){
-	unsigned char* vidmem = (char*)0xA0000;
-	if(c == '\r'){
-		xpos = 0;
-	}else if(c == '\n'){
-		xpos = 0;
-		ypos++;
-	}else{
-		for(int x = 0; x < 8; x++){
-			for(int y = 0; y < 8; y++){
-				if(((font_8x8[c][y] >> x)  & 0x01))
-					vidmem[xpos*8+x+(ypos*320*8)+y*320] = color;
-			}
-		}
-		xpos++;
-		if(xpos >= 40){
-			ypos++;
-			xpos = 0;
-			if(ypos >= 25){
-				ypos = 0;
-			}
-		}
-	}
-}
+
+// Specific mode print_util should implement:
+// putch_color(char c, char color);
+// clearScreen();
+// center_print(char c, char color); (Should provide a wrapper for center_print_base(c,color,width))
 
 void putch(char c){
 	putch_color(c, ccolor);
@@ -51,22 +32,11 @@ void println(char* c){
 	println_color(c,ccolor);
 }
 
-void clearScreen(){
-	unsigned char* vidmem = (char*)0xA0000;
-	for(int y=0; y<200; y++){
-		for(int x=0; x<320; x++){
-			vidmem[(x+(y*320))] = 0;
-		}
-	}
-	xpos = 0;
-	ypos = 0;
-}
-
 void setColor(char color){
 	ccolor = color;
 }
 
-void center_print(char* c, char color){
+void center_print_base(char* c, char color, int width){
 	if(xpos > 0){
 		print_color("\n",color);
 	}
@@ -74,11 +44,11 @@ void center_print(char* c, char color){
 	while(c[i]){
 		i++;
 	}
-	if(i > 40){
+	if(i > width){
 		print_color(c,color);
 	}else{
 		if(i % 2 == 0){
-			int h = (40-i)/2;
+			int h = (width-i)/2;
 			int j = 0;
 			while(j < h){
 				putch_color(' ', color);
@@ -91,7 +61,7 @@ void center_print(char* c, char color){
 				j++;
 			}
 		}else{
-			int h = (40-i)/2;
+			int h = (width-i)/2;
 			int j = 0;
 			while(j < h){
 				putch_color(' ', color);

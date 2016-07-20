@@ -9,5 +9,7 @@ typedef char *string;
 void outb(u16int port, u8int value);
 u8int inb(u16int port);
 u16int inw(u16int port);
+int sgn(int x);
 
+int abs(float x);
 #include "common.c"

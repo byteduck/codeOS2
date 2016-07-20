@@ -5,9 +5,12 @@ mov ah,0x02
 mov al,dh ;Read DH sectors
 mov ch,0x00 ;Cylinder 0
 mov dh,0x00 ;Head 0
-mov cl,0x02 ;Start from second sector
+cmp cl,0x00
+je disk_load_go
+mov cl,0x02 ;Start from second sector if cl is not set
+disk_load_go:
 int 0x13
-jc disk_error
+jc disk_error ;Something went wrong
 pop dx
 cmp dh,al ;Compare sectors expected vs sectors gotten
 jne disk_error
