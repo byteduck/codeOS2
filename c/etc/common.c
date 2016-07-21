@@ -1,15 +1,15 @@
-void outb(u16int port, u8int value){
+void outb(uint16_t port, uint8_t value){
     asm volatile ("outb %1, %0" : : "dN" (port), "a" (value));
 }
 
-u8int inb(u16int port){
-   u8int ret;
+uint8_t inb(uint16_t port){
+   uint8_t ret;
    asm volatile("inb %1, %0" : "=a" (ret) : "dN" (port));
    return ret;
 }
 
-u16int inw(u16int port){
-   u16int ret;
+uint16_t inw(uint16_t port){
+   uint16_t ret;
    asm volatile ("inw %1, %0" : "=a" (ret) : "dN" (port));
    return ret;
 }
@@ -22,4 +22,10 @@ int sgn(int x){
 
 int abs(float x){
 	return (int)x;
+}
+
+void *memset(void *dest, char val, int count){
+    char *temp = (char *)dest;
+    for( ; count != 0; count--) *temp++ = val;
+    return dest;
 }

@@ -1,7 +1,9 @@
-syscall_setup:
-	ret
-
 [extern syscallHandler]
+global syscall_handler
 syscall_handler:
+	push ebx
+	push eax
 	call syscallHandler
-	ret
+	pop eax
+	pop ebx
+	iret

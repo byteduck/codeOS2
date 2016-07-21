@@ -16,11 +16,17 @@ call switch_pm
 %include 'gdt.asm'
 %include 'pm.asm'
 %include 'syscall.asm'
+%include 'int.asm'
 
 [bits 32]
 [extern kmain]
 pm:
 	call kmain
+	mov eax,0
+	mov ebx,'T'
+	int 0x80
+	mov eax,1
+	int 0x80
 	jmp $
 
 PM_START_MSG db "Switching to 32-bit mode...",0x20,0

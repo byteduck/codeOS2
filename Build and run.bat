@@ -3,7 +3,7 @@ cd asm
 nasm bootloader.asm -f bin -o ../bin/bootloader.bin
 nasm startup.asm -f elf -o ../bin/startup.o
 cd ../c
-i686-elf-gcc -ffreestanding -c kernel.c -o ../bin/kernel.o -std=gnu99
+i686-elf-gcc -ffreestanding -c kernel.c -o ../bin/kernel.o -std=gnu99 -Woverflow
 cd ../bin
 i686-elf-ld -o kernel.bin -Ttext 0x1000 startup.o kernel.o --oformat binary --entry kmain
 type bootloader.bin kernel.bin 30_sectors.bin > os_image.bin
