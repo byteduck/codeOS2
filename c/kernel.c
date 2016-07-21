@@ -10,4 +10,5 @@ int kmain(){
 	//drawLine(10,10,310,10,0x0f);
 	center_print("Now in 32-bit protected mode!",0x07);
 	drawMonoBitmap(logo,320,50,0,0,0x2f);
+	//asm("sysenter");
 }
