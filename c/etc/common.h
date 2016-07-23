@@ -5,6 +5,7 @@ typedef          short sint16_t;
 typedef unsigned char  uint8_t;
 typedef          char  sint8_t;
 typedef char *string;
+typedef unsigned char bool;
 
 void outb(uint16_t port, uint8_t value);
 uint8_t inb(uint16_t port);

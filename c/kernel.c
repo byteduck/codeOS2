@@ -6,7 +6,9 @@
 #include "util/interrupt/idt.h"
 #include "util/interrupt/isr.h"
 #include "util/interrupt/irq.h"
-#include "util/syscall.h"
+#include "util/interrupt/syscall.h"
+#include "util/memory/heap.h"
+#include "util/memory/paging.h"
 
 extern void syscall_handler();
 
