@@ -1,5 +1,3 @@
-;call init_vesa ;Init VESA VGA
-
 ;Set video mode
 mov ah, 0x0
 mov ah, 0x0
@@ -21,13 +19,11 @@ call switch_pm
 [bits 32]
 [extern kmain]
 pm:
+	push edx
 	call kmain
-	mov eax,0
-	mov ebx,'T'
-	int 0x80
-	mov eax,1
-	int 0x80
+	pop edx
 	jmp $
 
 PM_START_MSG db "Switching to 32-bit mode...",0x20,0
 VESA_LOAD_MSG db "Loading VESA setup...",0x20,0
+BOOT_DRIVE dd 0

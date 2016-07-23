@@ -1,5 +1,5 @@
+unsigned char* vidmem = (char*)0xA0000;
 void putch_color(char c, char color){
-	unsigned char* vidmem = (char*)0xA0000;
 	if(c == '\r'){
 		xpos = 0;
 	}else if(c == '\n'){
@@ -24,7 +24,6 @@ void putch_color(char c, char color){
 }
 
 void clearScreen(){
-	unsigned char* vidmem = (char*)0xA0000;
 	for(int y=0; y<200; y++){
 		for(int x=0; x<320; x++){
 			vidmem[(x+(y*320))] = 0;

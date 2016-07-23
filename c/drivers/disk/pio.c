@@ -1,0 +1,1 @@
+uint8_t boot_disk = 0;

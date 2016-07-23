@@ -10,13 +10,14 @@ mov sp, bp
 ;call VESA_LOC
 
 call kernel_load
+mov dl,[BOOT_DRIVE]
 call KERNEL_LOC
 
 jmp $
 
 kernel_load:
 
-	mov dh, 30            ;Load 30 sectors
+	mov dh, 50            ;Load 50 sectors
 	mov bx, KERNEL_LOC    ;To KERNEL_LOC
 	mov dl, [BOOT_DRIVE]  ;From BOOT_DRIVE
 	mov cl, 0x02          ;Start from 2nd sector

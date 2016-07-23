@@ -1,5 +1,5 @@
 /*
-* Credit to James Molly for the paging code
+* Credit to James Molloy for the paging code
 */
 
 //Page directory for kernel

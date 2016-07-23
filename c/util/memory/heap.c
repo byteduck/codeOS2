@@ -1,5 +1,5 @@
 /*
-* Credit to James Molly for the heap code
+* Credit to James Molloy for the heap code
 */
 
 extern uint32_t end;
