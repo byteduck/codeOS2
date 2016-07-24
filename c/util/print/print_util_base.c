@@ -77,3 +77,10 @@ void center_print_base(char* c, char color, int width){
 		}
 	}
 }
+
+void printHex(uint8_t num){
+	char *str = "  ";
+	numToHexString(num, str);
+	print("0x");
+	print(str);
+}

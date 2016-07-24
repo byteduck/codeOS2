@@ -1,2 +1,2 @@
-qemu-system-i386 bin/os_image.bin
+qemu-system-x86_64 bin/os_image.bin
 del trace-*

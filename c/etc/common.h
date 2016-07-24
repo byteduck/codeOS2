@@ -13,5 +13,7 @@ uint16_t inw(uint16_t port);
 int sgn(int x);
 int abs(float x);
 void *memset(void *dest, char val, int count);
+void numToHexString(uint8_t num, char *str);
+char nibbleToHexString(uint8_t num);
 
 #include "common.c"
