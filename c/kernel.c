@@ -1,6 +1,6 @@
 #include "etc/common.h"
 #include "drivers/VGA/VGA_13h.h"
-#include "util/print/print_util_320_200_256.h"
+#include "util/print/print_util_80_25_char.h"
 #include "util/draw/draw_util.h"
 #include "etc/logo.h"
 #include "util/interrupt/idt.h"
@@ -15,15 +15,15 @@ extern void syscall_handler();
 extern uint8_t boot_disk;
 void interrupts_init();
 
-int kmain(uint32_t bootdisk){
-	boot_disk = bootdisk & 0xFF;
+int kmain(){
+	//boot_disk = bootdisk & 0xFF;
 	interrupts_init();
 	clearScreen();
-	drawMonoBitmap(logo,320,50,0,0,0x2f);
-	ypos = 7;
+	//drawMonoBitmap(logo,320,50,0,0,0x2f);
+	//ypos = 7;
 	center_print("Now in 32-bit protected mode!",0x07);
-	char test[512];
-	readSector(boot_disk,0,test);
+	//char test[512];
+	//readSector(boot_disk,0,test);
 }
 
 void interrupts_init(){

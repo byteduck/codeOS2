@@ -36,6 +36,8 @@ void isr_init(){
 void fault_handler(struct registers *r){
 	if(r->num < 32){
 		//TODO: Implement BSOD
-		println("FATAL");
+		print("FATAL ");
+		printHex(r->num);
+		println("");
 	}
 }
