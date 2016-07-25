@@ -1,10 +1,12 @@
 section .text
 [bits 32]
 [global start]
+[global BOOT_DRIVE]
 [extern kmain]
 
 start:
 	cli
+	mov [BOOT_DRIVE], dl
 	lgdt [gdt_descriptor]
     mov ax, 0x10
     mov ds, ax
@@ -22,6 +24,4 @@ start2:
 %include 'syscall.asm'
 %include 'int.asm'
 
-PM_START_MSG db "Switching to 32-bit mode...",0x20,0
-VESA_LOAD_MSG db "Loading VESA setup...",0x20,0
-BOOT_DRIVE dd 0
+BOOT_DRIVE: db 0

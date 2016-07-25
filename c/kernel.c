@@ -10,20 +10,21 @@
 #include "util/memory/heap.h"
 #include "util/memory/paging.h"
 #include "drivers/disk/pio.h"
+#include "drivers/PCI/PCI.h"
 
 extern void syscall_handler();
 extern uint8_t boot_disk;
+extern uint8_t BOOT_DRIVE;
 void interrupts_init();
 
 int kmain(){
-	//boot_disk = bootdisk & 0xFF;
+	boot_disk = BOOT_DRIVE;
 	interrupts_init();
 	clearScreen();
 	//drawMonoBitmap(logo,320,50,0,0,0x2f);
 	//ypos = 7;
 	center_print("Now in 32-bit protected mode!",0x07);
-	//char test[512];
-	//readSector(boot_disk,0,test);
+	PCIDebug();
 }
 
 void interrupts_init(){

@@ -4,7 +4,7 @@
 */
 uint8_t boot_disk = 0;
 
-void prepareDisk(uint8_t disk, uint32_t address){
+void prepareDisk(int disk, int address){
 	outb(0x1F1,0x00);
 	outb(0x1F2,0x01);
 	outb(0x1F3,(uint8_t)address);
@@ -15,7 +15,7 @@ void prepareDisk(uint8_t disk, uint32_t address){
 	while (!(inb(0x1F7) & 0x08)) {}
 }
 
-void readSector(uint8_t disk, uint32_t address, uint8_t *sect){
+void readSector(int disk, int address, uint8_t *sect){
 	prepareDisk(disk, address);
 	for(int i = 0; i < 256; i++){
 		uint16_t tmp = inw(0x1F0);
@@ -24,7 +24,7 @@ void readSector(uint8_t disk, uint32_t address, uint8_t *sect){
 	}
 }
 
-int getFirstPartition(uint8_t disk){
+int getFirstPartition(int disk){
 	prepareDisk(disk,0);
 	uint16_t pos = 0;
 	for(int i = 0; i < 256; i++){
@@ -36,6 +36,6 @@ int getFirstPartition(uint8_t disk){
 	return pos;
 }
 
-int getFSType(uint8_t disk){
+int getFSType(int disk){
 	
 }
