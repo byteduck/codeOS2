@@ -4,9 +4,11 @@
 CodeOS2 requires to be boot from GRUB.
 Example GRUB2 menuentry for CodeOS2:
 
-menuentry "CodeOS2"{
+```
+menuentry "CodeOS2" {
 	multiboot2 /KERNEL.SYS
 }
+```
 
 ## Goals
 
