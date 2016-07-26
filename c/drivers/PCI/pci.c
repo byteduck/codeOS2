@@ -21,6 +21,35 @@ uint16_t getPCIVendor(uint8_t bus, uint8_t slot, uint8_t function){
 	return vendor;
 }
 
+PCIDevice getPCIDevice(uint8_t tclass, uint8_t tsubclass, uint8_t tprogIF){
+	uint16_t classAndSub;
+	uint8_t class;
+	uint8_t subclass;
+	uint8_t progIF;
+	PCIDevice pcidevice = {.bus=0,.slot=0,.flags=0};
+	bool foundDevice = 0;
+	for(int bus = 0; bus < 256; bus++){
+		for(int device = 0; device < 32; device++){
+			if(getPCIVendor(bus, device, 0) != 0xFFFF){
+				classAndSub = PCIReadWord(bus, device, 0, 10);
+				class = (uint8_t)(classAndSub >> 8);
+				subclass = (uint8_t)classAndSub;
+				progIF = (uint8_t)(PCIReadWord(bus,device,0,8) >> 8);
+				if(class == tclass && subclass == tsubclass && progIF == tprogIF){
+					if(!foundDevice){
+						pcidevice.bus = bus;
+						pcidevice.slot = device;
+						pcidevice.flags = pcidevice.flags | 0b00000001;
+					}else{
+						pcidevice.flags = pcidevice.flags | 0b00000010;
+					}
+				}
+			}
+		}
+	}
+	return pcidevice;
+}
+
 void PCIDebug(){
 	println("Checking all PCI buses...");
 	for(int bus = 0; bus < 256; bus++){
@@ -34,14 +63,14 @@ void PCIDebug(){
 				print(",");
 				printHex(device);
 				if(((uint8_t)(PCIReadWord(bus,device,0,14) & 0xFF)) & 0x80 != 0){
-					print(" With Functions ");
-					for(uint8_t func = 0; func < 8; func++){
+					print(" With Multiple functions");
+					/*for(uint8_t func = 0; func < 8; func++){
 						if(getPCIVendor(bus,device,func) != 0xFFFF){
 							classAndSub = PCIReadWord(bus, device, func, 10);
 							printPCIClassCode((uint8_t)(classAndSub >> 8), (uint8_t)classAndSub, (uint8_t)(PCIReadWord(bus, device, func, 8) >> 8));
 							print(",");
 						}
-					}
+					}*/
 				}
 				println("");
 			}

@@ -1,7 +1,9 @@
 # codeOS2
 ### CodeOS Re-Written from scratch
 
-CodeOS2 requires to be boot from GRUB.
+### YOU MUST BOOT CODEOS2 FROM AN ACTUAL HARD DRIVE, THERE IS NO USB SUPPORT YET.
+
+CodeOS2 requires to be booted from GRUB.
 Example GRUB2 menuentry for CodeOS2:
 
 ```
