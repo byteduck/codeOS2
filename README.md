@@ -3,15 +3,11 @@
 
 ### CODEOS2 MUST BE BOOTED FROM A HARD DRIVE, FLOPPY DRIVE, DVD DRIVE, OR CD DRIVE. THERE IS NO USB SUPPORT YET.
 
+## How to use codeOS2
 
-CodeOS2 requires to be booted from GRUB.
-Example GRUB2 menuentry for CodeOS2:
+You can use the codeOS2.iso file in the bin folder. However, this file may not be up to date with the latest code changes.
 
-```
-menuentry "CodeOS2" {
-	multiboot2 /KERNEL.SYS
-}
-```
+Alternatively, you can set up your own GRUB disk (Grub 2 or higher) and use the KERNEL.SYS file in the bin folder along with the multiboot2 instruction.
 
 ## Goals
 
