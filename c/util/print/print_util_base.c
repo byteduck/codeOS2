@@ -84,3 +84,25 @@ void printHex(uint8_t num){
 	print("0x");
 	print(str);
 }
+
+void printHexw(uint16_t num){
+	char *str = "  ";
+	print("0x");
+	numToHexString(num >> 8, str);
+	print(str);
+	numToHexString(num, str);
+	print(str);
+}
+
+void printHexl(uint32_t num){
+	char *str = "  ";
+	print("0x");
+	numToHexString(num >> 24, str);
+	print(str);
+	numToHexString(num >> 16, str);
+	print(str);
+	numToHexString(num >> 8, str);
+	print(str);
+	numToHexString(num, str);
+	print(str);
+}

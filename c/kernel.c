@@ -38,6 +38,9 @@ int kmain(uint32_t mbootptr){
 	}else{
 		println("Partition is not FAT32!");
 	}
+	fat32part p = getFat32Part(boot_disk,getFirstPartition(boot_disk));
+	setCurrentFat32part(p);
+	listDir(p.root_dir_clust);
 }
 
 void parse_mboot(uint32_t addr){

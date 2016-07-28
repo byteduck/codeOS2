@@ -9,3 +9,4 @@ i686-elf-ld -n -o KERNEL.SYS multiboot.o startup.o kernel.o -T ../linker.ld
 copy KERNEL.SYS E:
 del *.o
 pause
+C:\ProgramData\Microsoft\Windows\Start Menu\Programs\VMware

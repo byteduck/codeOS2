@@ -47,6 +47,13 @@ void *memset(void *dest, char val, int count){
     return dest;
 }
 
+void *memcpy(void *dest, const void *src, int count){
+    const char *sp = (const char *)src;
+    char *dp = (char *)dest;
+    for(; count != 0; count--) *dp++ = *sp++;
+    return dest;
+}
+
 void numToHexString(uint8_t num, char *str){
 	str[1] = nibbleToHexString(num);
 	str[0] = nibbleToHexString(num >> 4);

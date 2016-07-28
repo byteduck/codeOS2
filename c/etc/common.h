@@ -16,6 +16,7 @@ uint32_t inl(uint16_t port);
 int sgn(int x);
 int abs(float x);
 void *memset(void *dest, char val, int count);
+void *memcpy(void *dest, const void *src, int count);
 void numToHexString(uint8_t num, char *str);
 char nibbleToHexString(uint8_t num);
 
