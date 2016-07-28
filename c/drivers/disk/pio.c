@@ -3,6 +3,8 @@
 * For reading specific filesystems, see the respective files in c/drivers/disk.
 */
 uint8_t boot_disk = 0;
+uint8_t buf[512];
+uint8_t buf2[512];
 
 void prepareDisk(int disk, int address){
 	outb(0x1F1,0x00);
