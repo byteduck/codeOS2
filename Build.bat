@@ -5,8 +5,7 @@ nasm multiboot.asm -f elf -o ../bin/multiboot.o
 cd ../c
 i686-elf-gcc -ffreestanding -c kernel.c -o ../bin/kernel.o -std=gnu99 -Woverflow
 cd ../bin
-i686-elf-ld -n -o KERNEL.SYS multiboot.o startup.o kernel.o -T ../linker.ld
-copy KERNEL.SYS E:
+i686-elf-ld -n -o disk/codeOS2/system/KERNEL.SYS multiboot.o startup.o kernel.o -T ../linker.ld
 del *.o
+xcopy disk E: /s /e /y
 pause
-C:\ProgramData\Microsoft\Windows\Start Menu\Programs\VMware

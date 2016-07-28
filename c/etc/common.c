@@ -67,3 +67,53 @@ char nibbleToHexString(uint8_t num){
 		return tmp+0x37;
 	}
 }
+
+bool isACharacter(uint8_t num){
+	return num >= 0x20 && num <= 0x7E;
+}
+
+int strlen(char *str){
+    int retval;
+    for(retval = 0; *str != '\0'; str++) retval++;
+    return retval;
+}
+
+bool strcmp(char *str1, char *str2){
+	bool ret = true;
+	int i = 0;
+	
+	while(str1[i] != '\0' && str2[i] != '\0'){
+		if(str1[i] != str2[i]){
+			ret = false;
+			break;
+		}
+		i++;
+	}
+	
+	return ret && str1[i] != '\0' && str2[i] != '\0';
+}
+
+int indexOf(char c, char *str){
+	int i = 0;
+	while(str[i] != '\0'){
+		if(str[i] == c)
+			return i;
+		i++;
+	}
+	return strlen(str);
+}
+
+void substr(int i, char *src, char *dest){ //substring exclusive
+	memcpy(dest,src,i);
+	dest[i] = '\0';
+}
+
+void substri(int i, char *src, char *dest){ //substring inclusive
+	memcpy(dest,src,i+1);
+	dest[i+1] = '\0';
+}
+
+void substrr(int s, int e, char *src, char *dest){ //substring exclusive range (end is exclusive, beginning is inclusive)
+	memcpy(dest,&src[s],e-s);
+	dest[e-s] = '\0';
+}

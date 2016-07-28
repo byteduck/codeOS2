@@ -13,11 +13,12 @@ void putch_color(char c, char color){
 		if(xpos >= 80){
 			ypos++;
 			xpos = 0;
-			if(ypos >= 25){
-				ypos = 0;
-			}
 		}
 	}
+	while(ypos >= 25){
+		scroll();
+	}
+	update_cursor();
 }
 
 void clearScreen(){
@@ -41,4 +42,26 @@ void setAllColor(char color){
 
 void center_print(char* c, char color){
 	center_print_base(c, color, 80);
+}
+
+void update_cursor(){
+	uint16_t position=(ypos*80) + xpos;
+    outb(0x3D4, 0x0F);
+    outb(0x3D5, (uint8_t)(position&0xFF));
+    outb(0x3D4, 0x0E);
+    outb(0x3D5, (uint8_t)((position>>8)&0xFF));
+}
+
+void scroll(){
+	uint16_t i = 80*2;
+	while(i < 80*25*2){
+		vidmem[i-(80*2)] = vidmem[i];
+		i++;
+	}
+	i = 80*2*24;
+	while(i < 80*25*2){
+		vidmem[i++] = ' ';
+		vidmem[i++] = 0x07;
+	}
+	ypos--;
 }

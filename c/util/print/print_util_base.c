@@ -8,7 +8,10 @@ char ccolor = 0x07;
 // center_print(char c, char color); (Should provide a wrapper for center_print_base(c,color,width))
 
 void putch(char c){
-	putch_color(c, ccolor);
+	if(c == '\b')
+		backspace();
+	else
+		putch_color(c, ccolor);
 }
 
 void print_color(char* c, char color){
@@ -105,4 +108,12 @@ void printHexl(uint32_t num){
 	print(str);
 	numToHexString(num, str);
 	print(str);
+}
+
+void backspace(){
+	if(xpos != 0){
+		xpos--;
+		putch(' ');
+		xpos--;
+	}
 }

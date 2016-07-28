@@ -12,6 +12,7 @@
 #include "util/memory/paging.h"
 #include "drivers/disk/pio.h"
 #include "drivers/disk/fat32.h"
+#include "drivers/keyboard/keyboard.h"
 
 extern void syscall_handler();
 extern void load_gdt();
@@ -40,7 +41,7 @@ int kmain(uint32_t mbootptr){
 	}
 	fat32part p = getFat32Part(boot_disk,getFirstPartition(boot_disk));
 	setCurrentFat32part(p);
-	listDir(p.root_dir_clust);
+	listCurrentDir();
 }
 
 void parse_mboot(uint32_t addr){
@@ -58,6 +59,7 @@ void interrupts_init(){
 	register_idt();
 	isr_init();
 	idt_set_gate(0x80, (unsigned)syscall_handler, 0x08, 0x8E);
+	irq_add_handler(1, keyboard_handler);
 	irq_init();
 	asm volatile("sti");
 }
