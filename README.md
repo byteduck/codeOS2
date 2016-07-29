@@ -5,7 +5,9 @@
 
 ## How to use codeOS2
 
-You can use the codeOS2.iso file in the bin folder. However, this file may not be up to date with the latest code changes.
+Use win32diskimager (or dd if you are on linux) to write bin/codeOS2.img to an HDD or USB drive. (This may not contain the latest code changes.) If you write it to a USB drive you cannot boot it off of a real computer since codeOS doesn't have USB support yet, but you can use it with VMWare player or VirtualBox physical disk mounting.
+
+You can also use the .img file directly with qemu.
 
 Alternatively, you can set up your own GRUB disk (Grub 2 or higher) and use the KERNEL.SYS file in the bin folder along with the multiboot2 instruction.
 
