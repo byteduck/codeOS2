@@ -71,4 +71,6 @@ unsigned char kbdus[256] = {
 	
 };
 
+void getInput();
+
 #include "keyboard.c"

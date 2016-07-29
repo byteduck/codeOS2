@@ -72,25 +72,28 @@ bool isACharacter(uint8_t num){
 	return num >= 0x20 && num <= 0x7E;
 }
 
-int strlen(char *str){
-    int retval;
-    for(retval = 0; *str != '\0'; str++) retval++;
-    return retval;
+int strlen(const char *str){
+        const char *s;
+
+        for (s = str; *s; ++s)
+                ;
+        return (s - str);
 }
 
-bool strcmp(char *str1, char *str2){
-	bool ret = true;
-	int i = 0;
+bool strcmp(string str1,string str2){
+    int i = 0;
+	bool flag = false;
+   
+    while(str1[i]!='\0' && str2[i]!='\0'){
+         if(str1[i]!=str2[i]){
+             flag=1;
+             break;
+         }
+         i++;
+    }
+
+    return flag == 0 && str1[i] == '\0' && str2[i] == '\0';
 	
-	while(str1[i] != '\0' && str2[i] != '\0'){
-		if(str1[i] != str2[i]){
-			ret = false;
-			break;
-		}
-		i++;
-	}
-	
-	return ret && str1[i] != '\0' && str2[i] != '\0';
 }
 
 int indexOf(char c, char *str){
@@ -98,6 +101,20 @@ int indexOf(char c, char *str){
 	while(str[i] != '\0'){
 		if(str[i] == c)
 			return i;
+		i++;
+	}
+	return strlen(str);
+}
+
+int indexOfn(char c, int n, char *str){ //like indexOf, except ignores n instances of the character
+	int i = 0;
+	int count = 0;
+	while(str[i] != '\0'){
+		if(str[i] == c)
+			if(count == n)
+				return i;
+			else
+				count++;
 		i++;
 	}
 	return strlen(str);
@@ -116,4 +133,18 @@ void substri(int i, char *src, char *dest){ //substring inclusive
 void substrr(int s, int e, char *src, char *dest){ //substring exclusive range (end is exclusive, beginning is inclusive)
 	memcpy(dest,&src[s],e-s);
 	dest[e-s] = '\0';
+}
+
+void strcpy(char *src, char *dest){
+	memcpy(dest, src, strlen(src));
+	dest[strlen(src)] = '\0';
+}
+
+int countOf(char c, char *str){ //Returns number of instances of c in str
+	int count = 0;
+	for(int i = 0; i < strlen(str); i++){
+		if(str[i] == c)
+			count++;
+	}
+	return count;
 }

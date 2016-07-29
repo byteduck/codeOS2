@@ -20,11 +20,14 @@ void *memcpy(void *dest, const void *src, int count);
 void numToHexString(uint8_t num, char *str);
 char nibbleToHexString(uint8_t num);
 bool isACharacter(uint8_t num);
-int strlen(char *str);
+int strlen(const char *str);
 bool strcmp(char *str1, char *str2);
 int indexOf(char c, char *str);
+int indexOfn(char c, int n, char *str);
 void substr(int i, char *src, char *dest);
 void substri(int i, char *src, char *dest);
 void substrr(int s, int e, char *src, char *dest);
+void strcpy(char *src, char *dest);
+int countOf(char c, char *str);
 
 #include "common.c"

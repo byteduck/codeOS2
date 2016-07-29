@@ -16,6 +16,7 @@ typedef struct fat32file{
 	uint32_t cluster;
 	uint32_t size;
 	uint32_t dir_cluster;
+	uint8_t attrib;
 } fat32file;
 
 bool isPartitionFAT32(int disk, int sect);
@@ -25,6 +26,11 @@ uint32_t clusterToLBAOther(fat32part p, uint32_t cluster);
 void setCurrentFat32part(fat32part p);
 void listDir(uint32_t cluster);
 void listCurrentDir();
+uint8_t changeDir(char *dir);
+bool isDirectory(fat32file file);
+fat32file getFile(char *file);
+bool exists(fat32file file);
+static uint8_t changeOneDir(char *dir);
 uint32_t getClusterOfEntry(uint8_t *entry);
 uint32_t getClusterChainSize(uint32_t cluster);
 uint32_t getFATSectorForCluster(uint32_t cluster);

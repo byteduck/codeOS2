@@ -1,6 +1,6 @@
 int xpos = 0;
 int ypos = 0;
-char ccolor = 0x07;
+char ccolor = 0x0f;
 
 // Specific mode print_util should implement:
 // putch_color(char c, char color);
@@ -115,5 +115,6 @@ void backspace(){
 		xpos--;
 		putch(' ');
 		xpos--;
+		update_cursor();
 	}
 }

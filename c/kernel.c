@@ -13,6 +13,7 @@
 #include "drivers/disk/pio.h"
 #include "drivers/disk/fat32.h"
 #include "drivers/keyboard/keyboard.h"
+#include "etc/shell.h"
 
 extern void syscall_handler();
 extern void load_gdt();
@@ -26,7 +27,7 @@ int kmain(uint32_t mbootptr){
 	parse_mboot(mbootptr);
 	
 	clearScreen();
-	center_print("Now in 32-bit protected mode!",0x0F);
+	center_print("Now in 32-bit protected mode!",0x07);
 	//drawMonoBitmap(logo,320,50,0,0,0x2f);
 	//ypos = 7;
 	uint8_t sect[512];
@@ -41,7 +42,7 @@ int kmain(uint32_t mbootptr){
 	}
 	fat32part p = getFat32Part(boot_disk,getFirstPartition(boot_disk));
 	setCurrentFat32part(p);
-	listCurrentDir();
+	shell();
 }
 
 void parse_mboot(uint32_t addr){
