@@ -24,8 +24,8 @@ fat32part getFat32Part(int disk, int part_sect);
 uint32_t clusterToLBA(uint32_t cluster);
 uint32_t clusterToLBAOther(fat32part p, uint32_t cluster);
 void setCurrentFat32part(fat32part p);
-void listDir(uint32_t cluster);
-void listCurrentDir();
+void listDir(uint32_t cluster, char *filter);
+void listCurrentDir(char *filter);
 uint8_t changeDir(char *dir);
 bool isDirectory(fat32file file);
 fat32file getFile(char *file);
@@ -36,5 +36,6 @@ uint32_t getClusterChainSize(uint32_t cluster);
 uint32_t getFATSectorForCluster(uint32_t cluster);
 uint32_t getNextCluster(uint32_t cluster);
 uint32_t getClusterOfFile(char *file);
+void printFileContents(fat32file f);
 
 #include "fat32.c"

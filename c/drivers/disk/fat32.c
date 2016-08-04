@@ -56,22 +56,24 @@ fat32part getFat32Part(int disk, int part_sect){
 	return temp;
 }
 
-void listDir(uint32_t cluster){
+void listDir(uint32_t cluster, char *filter){
 	bool done = false;
 	uint32_t ccluster = cluster;
 	uint32_t sector = clusterToLBA(ccluster);
-	uint32_t fsector = sector;
 	uint16_t dir_size = 0;
+	uint8_t current_col = 0;
+	uint8_t current_row = 0;
+	uint8_t oypos = ypos;
+	bool filtered = !strcmp(filter,"");
+	bool shouldPrintln = false;
 	while(!done){
 		readSector(currentfat32part.disk, sector, buf);
 		for(uint8_t i = 0; i < 16; i++){
 			uint16_t loc = 0x20*i;
-			if(buf[loc] == 0){ //End of directory
-				done = true;
-				i = 16;
-			}else if(buf[loc] != 0xE5 /*Is not unused*/ 
+			if(buf[loc] != 0xE5 /*Is not unused*/ 
 					&& (buf[loc+0xB] & 0xF) != 0xF /*Is not a long filename entry*/ 
-					&& (buf[loc+0xB] & 0xA) == 0 /*Is a file or directory and should be shown*/){
+					&& (buf[loc+0xB] & 0xA) == 0 /*Is a file or directory and should be shown*/
+					&& buf[loc] != 0 /*Is not empty */){
 				dir_size++;
 				uint8_t lastChar = 0;
 				for(int i = 0; i < 8; i++){
@@ -79,38 +81,79 @@ void listDir(uint32_t cluster){
 						lastChar = i;
 					}
 				}
+				
+				xpos = current_col*13;
+				
+				shouldPrintln = true;
+				
 				if(buf[loc+0xB] & 0x10){ //Is a directory
 					char name[lastChar+2];
 					memcpy(&name, &buf[loc], lastChar+1);
 					name[lastChar+1] = 0;
-					print(name);
-					for(uint8_t j = 0; j <= 13-(lastChar+1); j++){
-						print(" ");
+					setColor(0x0a);
+					if(filtered){
+						if(contains(name,filter))
+							print(name);
+						else
+							shouldPrintln = false;
+					}else{
+						print(name);
 					}
-					println("<DIR>");
 				}else{ //Is a file
 					char name[lastChar+6];
 					memcpy(&name, &buf[loc], lastChar+1);
 					memcpy(&name[lastChar+1], &buf[loc+7], 4);
 					name[lastChar+5] = 0;
 					name[lastChar+1] = '.';
-					println(name);
+					setColor(0x07);
+					if(filtered){
+						if(contains(name,filter))
+							print(name);
+						else
+							shouldPrintln = false;
+					}else{
+						print(name);
+					}
+				}
+				if(shouldPrintln)
+					current_row++;
+				if(current_row >= SCREEN_CHAR_HEIGHT){
+					if(current_col == 0){
+						for(int i = 0; i <= oypos; i++)
+							scroll();
+					}
+					current_row = 1;
+					current_col++;
+					ypos = 0;
+					if(current_col*13 >= SCREEN_CHAR_WIDTH){
+						current_col = 0;
+					}
+				}else{
+					if(shouldPrintln)
+						println("");
 				}
 			}else{
 				
 			}
 		}
 		sector++;
-		if((sector - fsector) % currentfat32part.sectors_per_cluster == 0){
+		if(sector % currentfat32part.sectors_per_cluster == 0){
 			ccluster = getNextCluster(ccluster);
+			if(ccluster >= 0x0FFFFFF8){
+				done = true;
+			}
 			sector = clusterToLBA(ccluster);
-			fsector = sector;
 		}
+	}
+	setColor(0x07);
+	if(current_col > 0){
+		ypos = SCREEN_CHAR_HEIGHT-1;
+		println("");
 	}
 }
 
-void listCurrentDir(){
-	listDir(currentfat32part.current_dir_clust);
+void listCurrentDir(char *filter){
+	listDir(currentfat32part.current_dir_clust, filter);
 }
 
 uint8_t changeDir(char *dir){ //Returns 0 if success, 1 if is not a directory, and 2 if doesn't exist.
@@ -177,7 +220,6 @@ fat32file getFile(char *file){ //If file doesn't have any clusters allocated to 
 	bool done = false;
 	uint32_t ccluster = currentfat32part.current_dir_clust;
 	uint32_t sector = clusterToLBA(ccluster);
-	uint32_t fsector = sector;
 	uint32_t intbuf = 0;
 	fat32file ret = {0xFFFFFFFF,0,0};
 	while(!done){
@@ -246,10 +288,12 @@ fat32file getFile(char *file){ //If file doesn't have any clusters allocated to 
 			}
 		}
 		sector++;
-		if((sector - fsector) % currentfat32part.sectors_per_cluster == 0){
+		if(sector % currentfat32part.sectors_per_cluster == 0){
 			ccluster = getNextCluster(ccluster);
 			sector = clusterToLBA(ccluster);
-			fsector = sector;
+			if(ccluster >= 0x0FFFFFF8){
+				done = true;
+			}
 		}
 	}
 	return ret;
@@ -265,8 +309,8 @@ bool exists(fat32file file){
 
 uint32_t getClusterChainSize(uint32_t cluster){
 	bool done = false;
-	uint8_t ccluster = cluster;
-	uint8_t cbyte;
+	uint32_t ccluster = cluster;
+	uint16_t cbyte;
 	uint32_t nextCluster = 0;
 	uint32_t chain_size = 0;
 	while(!done){
@@ -288,13 +332,32 @@ uint32_t getClusterChainSize(uint32_t cluster){
 
 uint32_t getNextCluster(uint32_t cluster){
 	readSector(currentfat32part.disk, getFATSectorForCluster(cluster), buf2);
-	uint8_t cbyte = (cluster % 128)*4;
+	uint16_t cbyte = (cluster % 128)*4;
 	uint32_t ret = 0;
 	ret += ((uint32_t)buf2[cbyte]);
 	ret += ((uint32_t)buf2[cbyte+1] << 8);
 	ret += ((uint32_t)buf2[cbyte+2] << 16);
 	ret += (((uint32_t)buf2[cbyte+3] & 0xF) << 24); // & 0xF is because we are ignoring the top 4 bits because they are reserved
 	return ret;
+}
+
+void printFileContents(fat32file file){
+	if(exists(file)){
+		bool done = false;
+		uint32_t ccluster = getFATSectorForCluster(file.cluster);
+		while(!done){
+			for(int j = 0; j < currentfat32part.sectors_per_cluster; j++){
+				readSector(currentfat32part.disk, clusterToLBA(ccluster)+j, buf2);
+				for(int i = 0; i < 256; i++){
+					if(buf2[i] != 0)
+						putch(buf2[i]);
+				}
+			}
+			ccluster = getNextCluster(ccluster);
+			if(ccluster >= 0x0FFFFFF8)
+				done = true;
+		}
+	}
 }
 
 uint32_t getFATSectorForCluster(uint32_t cluster){

@@ -148,3 +148,21 @@ int countOf(char c, char *str){ //Returns number of instances of c in str
 	}
 	return count;
 }
+
+bool contains(char *str, char *cont){ //Returns true if str has cont in it.
+	int i = 0;
+	int contlen = strlen(cont);
+	bool flaga = false;
+	bool flagb = false;
+	while(str[i+contlen-1] != '\0'){
+		flagb = true;
+		for(int j = 0; j < strlen(cont); j++){
+			if(cont[j] != str[j+i])
+				flagb = false;
+		}
+		if(flagb)
+			flaga = true;
+		i++;
+	}
+	return flaga;
+}

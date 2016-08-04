@@ -6,3 +6,5 @@ void update_cursor();
 void scroll();
 #include "print_util_base.h"
 #include "print_util_80_25_char.c"
+#define SCREEN_CHAR_WIDTH 80
+#define SCREEN_CHAR_HEIGHT 25

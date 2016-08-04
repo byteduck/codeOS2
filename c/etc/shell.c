@@ -21,13 +21,19 @@ void shell(){
 
 static void command_eval(char *cmd, char *args){
 	if(strcmp(cmd,"help")){
-		println("ls: List the files in the current directory.");
+		println("ls: List the files in the current directory. Use -h for help.");
 		println("cd: Change the current directory.");
 		println("pwd: Print the working directory.");
 		println("about: Shows some information about the system.");
 		println("help: Shows this message.");
 	}else if(strcmp(cmd,"ls")){
-		listCurrentDir();
+		if(strcmp(args,"-h")){
+			println("Usage: ls [contains]");
+		}else if(!strcmp(args,"")){
+			listCurrentDir(args);
+		}else{
+			listCurrentDir("");
+		}
 	}else if(strcmp(cmd,"cd")){
 		switch(changeDir(args)){
 			case 1:
@@ -50,6 +56,19 @@ static void command_eval(char *cmd, char *args){
 		}
 	}else if(strcmp(cmd,"about")){
 		println("CodeOS2 v0.0");
+	}else if(strcmp(cmd, "partinfo")){
+		print("Disk: ");
+		printHex(currentfat32part.disk);
+		print("\nSectors per cluster: ");
+		printHex(currentfat32part.sectors_per_cluster);
+		println("");
+	}else if(strcmp(cmd,"cat")){
+		fat32file f = getFile(args);
+		if(exists(f)){
+			printFileContents(f);
+		}else{
+			println("File doesn't exist!");
+		}
 	}else{
 		print("\"");
 		print(cmd);
