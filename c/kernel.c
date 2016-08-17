@@ -14,6 +14,7 @@
 #include "drivers/disk/fat32.h"
 #include "drivers/keyboard/keyboard.h"
 #include "etc/shell.h"
+#include "util/interrupt/pit.h"
 
 extern void syscall_handler();
 extern void load_gdt();
@@ -61,6 +62,7 @@ void interrupts_init(){
 	isr_init();
 	idt_set_gate(0x80, (unsigned)syscall_handler, 0x08, 0x8E);
 	irq_add_handler(1, keyboard_handler);
+	irq_add_handler(0, pit_handler);
 	irq_init();
 	asm volatile("sti");
 }

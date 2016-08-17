@@ -343,8 +343,12 @@ uint32_t getNextCluster(uint32_t cluster){
 
 void printFileContents(fat32file file){
 	if(exists(file)){
+		if(isDirectory(file)){
+			println("File is a directory.");
+			return;
+		}
 		bool done = false;
-		uint32_t ccluster = getFATSectorForCluster(file.cluster);
+		uint32_t ccluster = file.cluster;
 		while(!done){
 			for(int j = 0; j < currentfat32part.sectors_per_cluster; j++){
 				readSector(currentfat32part.disk, clusterToLBA(ccluster)+j, buf2);
@@ -357,6 +361,7 @@ void printFileContents(fat32file file){
 			if(ccluster >= 0x0FFFFFF8)
 				done = true;
 		}
+		println("");
 	}
 }
 
