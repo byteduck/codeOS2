@@ -65,3 +65,11 @@ void scroll(){
 	}
 	ypos--;
 }
+
+void PANIC_base(char *error, char *msg){
+	clearScreen();
+	setAllColor(0x9f);
+	println("codeOS2 encountered an error it couldn't recover from.");
+	println(error);
+	println(msg);
+}

@@ -7,6 +7,9 @@ section .text
 start:
 	push dword ebx
 	call kmain
+	mov eax, 1
+	mov ebx, retfromkernel
+	int 0x80 ;syscall to print string
 	jmp $
 	
 load_gdt:
@@ -21,8 +24,12 @@ load_gdt:
     jmp 0x08:load_gdt2
 load_gdt2:
 	ret
+	
+retfromkernel: db "Returned from kernel"
 
 ;%include 'vesa.asm' I still gotta figure out how to deal with this in 32-bit mode
 %include 'gdt.asm'
 %include 'syscall.asm'
 %include 'int.asm'
+%include 'paging.asm'
+%include 'misc.asm'

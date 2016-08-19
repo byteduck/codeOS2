@@ -118,3 +118,8 @@ void backspace(){
 		update_cursor();
 	}
 }
+
+void PANIC(char *error, char *msg, bool hang){
+	PANIC_base(error, msg);
+	while(hang);
+}

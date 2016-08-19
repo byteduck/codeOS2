@@ -166,3 +166,11 @@ bool contains(char *str, char *cont){ //Returns true if str has cont in it.
 	}
 	return flaga;
 }
+
+void cli(){
+	asm volatile("cli");
+}
+
+void sti(){
+	asm volatile("sti");
+}

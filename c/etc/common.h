@@ -7,6 +7,13 @@ typedef          char  sint8_t;
 typedef char *string;
 typedef unsigned char bool;
 
+struct registers{
+    unsigned int gs, fs, es, dsl;
+    unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax;
+    unsigned int num, err_code;
+    unsigned int eip, cs, eflags, useresp, ss;
+};
+
 void outb(uint16_t port, uint8_t value);
 void outw(uint16_t port, uint16_t value);
 void outl(uint16_t port, uint32_t value);
@@ -29,5 +36,7 @@ void substri(int i, char *src, char *dest);
 void substrr(int s, int e, char *src, char *dest);
 void strcpy(char *src, char *dest);
 int countOf(char c, char *str);
+void cli();
+void sti();
 
 #include "common.c"

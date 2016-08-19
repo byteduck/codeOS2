@@ -9,4 +9,5 @@ void printHex(uint8_t num);
 void printHexw(uint16_t num);
 void printHexl(uint32_t num);
 void backspace();
+void PANIC(char *error, char *msg, bool hang);
 #include "print_util_base.c"

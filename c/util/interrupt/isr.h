@@ -1,10 +1,3 @@
-struct registers{
-    unsigned int gs, fs, es, dsl;
-    unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax;
-    unsigned int num, err_code;
-    unsigned int eip, cs, eflags, useresp, ss;
-};
-
 extern void isr0();
 extern void isr1();
 extern void isr2();
