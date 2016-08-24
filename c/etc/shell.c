@@ -69,6 +69,13 @@ static void command_eval(char *cmd, char *args){
 		}else{
 			println("File doesn't exist!");
 		}
+	}else if(strcmp(cmd,"exec")){
+		fat32file f = getFile(args);
+		if(exists(f)){
+			executeFile(f);
+		}else{
+			println("File doesn't exist.");
+		}
 	}else{
 		print("\"");
 		print(cmd);

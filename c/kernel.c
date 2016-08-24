@@ -21,11 +21,13 @@ extern void load_gdt();
 extern uint8_t boot_disk;
 void interrupts_init();
 void parse_mboot(uint32_t addr);
+int i;
 
 int kmain(uint32_t mbootptr){
 	load_gdt();
 	interrupts_init();
 	setupPaging();
+	init_heap();
 	parse_mboot(mbootptr);
 	clearScreen();
 	center_print("Now in 32-bit protected mode!",0x07);

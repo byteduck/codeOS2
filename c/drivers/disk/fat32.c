@@ -365,6 +365,22 @@ void printFileContents(fat32file file){
 	}
 }
 
+void executeFile(fat32file file){
+	if(exists(file)){
+		if(isDirectory(file)){
+			println("File is a directory.");
+			return;
+		}
+		bool done = false;
+		uint32_t ccluster = file.cluster;
+		readSector(currentfat32part.disk, clusterToLBA(ccluster), ebuf);
+		//load_page_dir(exec_page_directory);
+		((void(*)())&ebuf)();
+		while(true);
+		println("");
+	}
+}
+
 uint32_t getFATSectorForCluster(uint32_t cluster){
 	return currentfat32part.fat_sect+((cluster * 4) / 512);
 }
