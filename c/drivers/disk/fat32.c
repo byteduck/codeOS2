@@ -1,5 +1,6 @@
 const char *fat32sig = "FAT32   ";
 fat32part currentfat32part;
+char *cdir = 0;
 bool isPartitionFAT32(int disk, int sect){
 	readSector(disk, sect, buf);
 	bool flag = true;
@@ -102,9 +103,13 @@ void listDir(uint32_t cluster, char *filter){
 				}else{ //Is a file
 					char name[lastChar+6];
 					memcpy(&name, &buf[loc], lastChar+1);
-					memcpy(&name[lastChar+1], &buf[loc+7], 4);
-					name[lastChar+5] = 0;
-					name[lastChar+1] = '.';
+					if(!(buf[loc+9] == ' ' && buf[loc+10] == ' ' && buf[loc+11] == ' ')){ //If there is not no extension
+						memcpy(&name[lastChar+1], &buf[loc+7], 4);
+						name[lastChar+5] = 0;
+						name[lastChar+1] = '.';
+					}else{
+						name[lastChar+1] = 0;
+					}
 					setColor(0x07);
 					if(filtered){
 						if(contains(name,filter))
@@ -207,6 +212,25 @@ static uint8_t changeOneDir(char *dir){ //Returns 0 if success, 1 if is not a di
 			}else{
 				currentfat32part.current_dir_clust = currentfat32part.root_dir_clust;
 			}
+			if(cdir == 0) cdir = String("/");
+			if(strcmp(dir,"..")){
+				char *tmp = String(cdir);
+				strfree(cdir);
+				uint8_t olen = strlen(tmp);
+				substr(indexOfn('/',countOf('/',tmp)-1, tmp), tmp, tmp);
+				cdir = String(tmp);
+				kfree(tmp, olen);
+			}else if(strcmp(dir,".")){}else{
+				if(strcmp(cdir,"/")) cdir[0] = 0;
+				char *tmp = String(cdir);
+				strfree(cdir);
+				cdir = kmalloc(strlen(tmp)+strlen(folder)+1);
+				strcpy(tmp,cdir);
+				cdir[strlen(tmp)]='/';
+				strcpy(folder,&cdir[strlen(tmp)+1]);
+				strfree(tmp);
+			}
+			if(strcmp(cdir,"")) strcpy("/",cdir);
 			return 0;
 		}else{
 			return 1;
@@ -262,9 +286,13 @@ fat32file getFile(char *file){ //If file doesn't have any clusters allocated to 
 				}else{ //Is a file
 					char name[lastChar+6];
 					memcpy(&name, &buf[loc], lastChar+1);
-					memcpy(&name[lastChar+1], &buf[loc+7], 4);
-					name[lastChar+5] = 0;
-					name[lastChar+1] = '.';
+					if(!(buf[loc+9] == ' ' && buf[loc+10] == ' ' && buf[loc+11] == ' ')){ //If there is not no extension
+						memcpy(&name[lastChar+1], &buf[loc+7], 4);
+						name[lastChar+5] = 0;
+						name[lastChar+1] = '.';
+					}else{
+						name[lastChar+1] = 0;
+					}
 					if(strcmp(name,file) && !done){
 						intbuf = 0;
 						intbuf += ((uint32_t)buf[loc+0x14] << 16);
@@ -365,7 +393,7 @@ void printFileContents(fat32file file){
 	}
 }
 
-void executeFile(fat32file file){
+void executeFile(fat32file file){ //DOES NOT WORK YET, an executable will only work if it doesn't access memory or jump.
 	if(exists(file)){
 		if(isDirectory(file)){
 			println("File is a directory.");
@@ -376,9 +404,14 @@ void executeFile(fat32file file){
 		readSector(currentfat32part.disk, clusterToLBA(ccluster), ebuf);
 		//load_page_dir(exec_page_directory);
 		((void(*)())&ebuf)();
-		while(true);
 		println("");
 	}
+}
+
+void printCurrentDir(){
+	if(cdir == 0) cdir = String("/");
+	println(cdir);
+	return;
 }
 
 uint32_t getFATSectorForCluster(uint32_t cluster){

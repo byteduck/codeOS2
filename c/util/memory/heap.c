@@ -98,8 +98,12 @@ void kfree(void *ptr, uint32_t len){
 	}
 }
 
-char *String(char* str){
-	char* str1 = kmalloc(strlen(str));
+char *String(char *str){
+	char* str1 = kmalloc(strlen(str)+1);
 	strcpy(str,str1);
 	return str1;
+}
+
+void strfree(char *str){
+	kfree(str, strlen(str)+1);
 }

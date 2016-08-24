@@ -52,7 +52,7 @@ static void command_eval(char *cmd, char *args){
 			printHex(currentfat32part.current_dir_clust);
 			println("");
 		}else{
-			println("pwd is not supported yet. Use \"pwd -c\" to print the working cluster.");
+			printCurrentDir();
 		}
 	}else if(strcmp(cmd,"about")){
 		println("CodeOS2 v0.0");

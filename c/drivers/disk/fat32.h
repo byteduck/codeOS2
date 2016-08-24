@@ -37,5 +37,6 @@ uint32_t getFATSectorForCluster(uint32_t cluster);
 uint32_t getNextCluster(uint32_t cluster);
 uint32_t getClusterOfFile(char *file);
 void printFileContents(fat32file f);
+void printCurrentDir();
 
 #include "fat32.c"

@@ -19,5 +19,6 @@ FrameSet fsalloc();
 void *kmalloc(uint32_t len);
 void kfree(void *ptr, uint32_t len);
 char *String(char *str);
+void strfree(char *str);
 
 #include "heap.c"
