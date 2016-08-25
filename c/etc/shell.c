@@ -26,6 +26,11 @@ static void command_eval(char *cmd, char *args){
 		println("pwd: Print the working directory.");
 		println("about: Shows some information about the system.");
 		println("help: Shows this message.");
+		println("cat: Prints a file's contents.");
+		println("about: Prints some information.");
+		println("partinfo: Prints information about the current partition.");
+		println("exec: Executes a program. (DOESN'T WORK YET!)");
+		println("pagefault: Triggers a page fault.");
 	}else if(strcmp(cmd,"ls")){
 		if(strcmp(args,"-h")){
 			println("Usage: ls [contains]");
@@ -75,6 +80,16 @@ static void command_eval(char *cmd, char *args){
 			executeFile(f);
 		}else{
 			println("File doesn't exist.");
+		}
+	}else if(strcmp(cmd,"pagefault")){
+		if(strcmp(args,"-r")){
+			char i = ((char*)0xDEADC0DE)[0];
+		}else if(strcmp(args,"-w")){
+			((char*)0xDEADC0DE)[0]='F';
+		}else{
+			println("Usage: pagefault [-r,-w]");
+			println("-r: Triggers a page fault by reading.");
+			println("-w: Triggers a page fault by writing.");
 		}
 	}else{
 		print("\"");

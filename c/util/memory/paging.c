@@ -7,15 +7,10 @@ void setupPaging(){
 	for(i = 0; i < 1024; i++){
 		page_directory[i] = 0x3;
 	}
-	for(i = 0; i < 5; i++){
+	for(i = 0; i < 1024; i++){
 		for(j = 0; i < 1024; i++)
 			page_tables[j][i] = (i * 0x1000+(0x400000*j)) | 3;
 	}
-	/*j = 0;
-	for(i = (uint32_t)&kstart/0x1000; i < (uint32_t)&kend/0x1000; i++){
-		first_page_table[j] = (i * 0x1000) | 3;         //Mapping our kernel to 0x0
-		j++;
-	}*/
 	for(j = 0; j < 5; j++)
 		page_directory[j] = ((unsigned int)page_tables[j]) | 3;
 	load_page_dir(page_directory);

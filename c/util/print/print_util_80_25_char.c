@@ -5,6 +5,9 @@ void putch_color(char c, char color){
 	}else if(c == '\n'){
 		xpos = 0;
 		ypos++;
+	}else if(c == '\t'){
+		for(uint8_t i = 0; i < 5; i++)
+			putch_color(' ',color);
 	}else{
 		int pos = (xpos+(ypos*80))*2;
 		vidmem[pos] = c;
