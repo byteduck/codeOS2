@@ -15,6 +15,7 @@
 #include "drivers/keyboard/keyboard.h"
 #include "etc/shell.h"
 #include "util/interrupt/pit.h"
+#define HIGHER_HALF 0xC0000000
 
 extern void syscall_handler();
 extern void load_gdt();
@@ -26,9 +27,9 @@ int i;
 int kmain(uint32_t mbootptr){
 	load_gdt();
 	interrupts_init();
-	setupPaging();
+	//setupPaging();
 	init_heap();
-	parse_mboot(mbootptr);
+	parse_mboot(mbootptr+HIGHER_HALF);
 	clearScreen();
 	center_print("Now in 32-bit protected mode!",0x07);
 	//drawMonoBitmap(logo,320,50,0,0,0x2f);

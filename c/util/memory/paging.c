@@ -45,10 +45,11 @@ void pageFaultHandler(struct registers *r){
 	}
 	
 	printHexl(err_pos);
+	println("");
 	if(other){
-		println("");
 		print("Error Code: ");
 		printHex(r->err_code);
+		println("");
 	}
 	while(true);
 }

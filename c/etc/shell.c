@@ -1,8 +1,9 @@
 char cmdbuf[256];
 char argbuf[256];
+bool exitShell = false;
 
 void shell(){
-	while(true){
+	while(!exitShell){
 		print("CodeOS2> ");
 		shell_mode = true;
 		getInput();
@@ -30,7 +31,8 @@ static void command_eval(char *cmd, char *args){
 		println("about: Prints some information.");
 		println("partinfo: Prints information about the current partition.");
 		println("exec: Executes a program. (DOESN'T WORK YET!)");
-		println("pagefault: Triggers a page fault.");
+		println("pagefault: Triggers a page fault, in case you wanted to.");
+		println("exit: Pretty self explanatory.");
 	}else if(strcmp(cmd,"ls")){
 		if(strcmp(args,"-h")){
 			println("Usage: ls [contains]");
@@ -91,6 +93,8 @@ static void command_eval(char *cmd, char *args){
 			println("-r: Triggers a page fault by reading.");
 			println("-w: Triggers a page fault by writing.");
 		}
+	}else if(strcmp(cmd,"exit")){
+		exitShell = true;
 	}else{
 		print("\"");
 		print(cmd);

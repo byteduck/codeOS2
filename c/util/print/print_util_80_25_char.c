@@ -1,4 +1,4 @@
-unsigned char* vidmem = (char*)0xb8000;
+unsigned char* vidmem = (char*)0xC00B8000; //It would be 0xb8000, but we mapped the kernel to 0xc0000000.
 void putch_color(char c, char color){
 	if(c == '\r'){
 		xpos = 0;
@@ -72,7 +72,8 @@ void scroll(){
 void PANIC_base(char *error, char *msg){
 	clearScreen();
 	setAllColor(0x9f);
-	println("codeOS2 encountered an error it couldn't recover from.");
+	println("Good job, you crashed it.");
+	println("Anyway, here's the details, since you probably need them:\n");
 	println(error);
 	println(msg);
 }
