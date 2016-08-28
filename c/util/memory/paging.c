@@ -1,19 +1,23 @@
 uint32_t page_directory[1024] __attribute__((aligned(4096)));
-uint32_t page_tables[5][1024] __attribute__((aligned(4096)));
+uint32_t page_tables[1024] __attribute__((aligned(4096)));
 uint8_t ebuf[256] __attribute__((aligned(4096)));
+uint32_t krnlstartPhys = (uint32_t)&krnlstart-HIGHER_HALF;
+uint32_t krnlendPhys = (uint32_t)&krnlend-HIGHER_HALF;
+extern uint32_t BootPageDirectory;
 
 void setupPaging(){
-	uint32_t i,j;
-	for(i = 0; i < 1024; i++){
-		page_directory[i] = 0x3;
+	/*uint32_t i,j;
+	page_directory[0]= 0x83;
+	for(i = 1; i < (HIGHER_HALF >> 24); i++){
+		page_directory[i] = 0x0;
 	}
-	for(i = 0; i < 1024; i++){
-		for(j = 0; i < 1024; i++)
-			page_tables[j][i] = (i * 0x1000+(0x400000*j)) | 3;
+	page_directory[i] = 0x83;
+	i++;
+	for(i=i; i < 1024; i++){
+		page_directory[i] = 0;
 	}
-	for(j = 0; j < 5; j++)
-		page_directory[j] = ((unsigned int)page_tables[j]) | 3;
-	load_page_dir(page_directory);
+	uint32_t *d = (uint32_t*)0x1000;*/
+	load_page_dir((uint32_t *)((uint32_t)&BootPageDirectory-HIGHER_HALF));
 }
 
 void pageFaultHandler(struct registers *r){

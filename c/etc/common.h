@@ -7,6 +7,9 @@ typedef          char  sint8_t;
 typedef char *string;
 typedef unsigned char bool;
 
+extern uint32_t krnlstart;
+extern uint32_t krnlend;
+
 struct registers{
     unsigned int gs, fs, es, dsl;
     unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax;

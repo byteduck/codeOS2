@@ -1,3 +1,5 @@
+#define HIGHER_HALF 0xC0000000
+
 #include "etc/common.h"
 #include "etc/multiboot.h"
 #include "drivers/VGA/VGA_13h.h"
@@ -15,7 +17,6 @@
 #include "drivers/keyboard/keyboard.h"
 #include "etc/shell.h"
 #include "util/interrupt/pit.h"
-#define HIGHER_HALF 0xC0000000
 
 extern void syscall_handler();
 extern void load_gdt();
@@ -27,7 +28,7 @@ int i;
 int kmain(uint32_t mbootptr){
 	load_gdt();
 	interrupts_init();
-	//setupPaging();
+	setupPaging();
 	init_heap();
 	parse_mboot(mbootptr+HIGHER_HALF);
 	clearScreen();
