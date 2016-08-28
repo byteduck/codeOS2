@@ -393,6 +393,8 @@ void printFileContents(fat32file file){
 	}
 }
 
+
+uint8_t ebuf[256] __attribute__((aligned(4096)));
 void executeFile(fat32file file){ //DOES NOT WORK YET, an executable will only work if it doesn't access memory or jump.
 	if(exists(file)){
 		if(isDirectory(file)){
@@ -403,7 +405,7 @@ void executeFile(fat32file file){ //DOES NOT WORK YET, an executable will only w
 		uint32_t ccluster = file.cluster;
 		readSector(currentfat32part.disk, clusterToLBA(ccluster), ebuf);
 		//load_page_dir(exec_page_directory);
-		((void(*)())&ebuf)();
+		exec(ebuf);
 		println("");
 	}
 }

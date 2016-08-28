@@ -36,14 +36,21 @@ void isr_init(){
 void fault_handler(struct registers *r){
 	if(r->num < 32){
 		switch(r->num){
-			case 14:
+			
+			case 13: //GPF
+			PANIC("GENERAL_PROTECTION_FAULT", "Error code:", false);
+			printHex(r->err_code);
+			while(true);
+			break;
+			
+			case 14: //Page fault
 			pageFaultHandler(r);
 			break;
 			
 			default:
-			print("FATAL ");
+			PANIC("Something happened.", "Error code:", false);
 			printHex(r->num);
-			println("");
+			while(true);
 			break;
 		}
 	}

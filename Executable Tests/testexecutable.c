@@ -1,6 +1,7 @@
-#include "../libc/stdio.h"
+void printf(char* c);
 
 void main(){
-	printf("test");
-	return;
+	printf("Hello from C!");
 }
+
+#include "../libc/stdio.h"

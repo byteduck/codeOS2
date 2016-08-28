@@ -1,6 +1,5 @@
 uint32_t page_directory[1024] __attribute__((aligned(4096)));
-uint32_t page_tables[1024] __attribute__((aligned(4096)));
-uint8_t ebuf[256] __attribute__((aligned(4096)));
+uint32_t exec_page_table[1024] __attribute__((aligned(4096)));
 uint32_t krnlstartPhys = (uint32_t)&krnlstart-HIGHER_HALF;
 uint32_t krnlendPhys = (uint32_t)&krnlend-HIGHER_HALF;
 extern uint32_t BootPageDirectory;
@@ -17,6 +16,15 @@ void setupPaging(){
 		page_directory[i] = 0;
 	}
 	uint32_t *d = (uint32_t*)0x1000;
+	load_page_dir((uint32_t *)((uint32_t)&page_directory[0]-HIGHER_HALF));
+}
+
+void exec(uint8_t *prog){
+	exec_page_table[0] = ((uint32_t)&prog[0]-HIGHER_HALF) | 0x3;
+	page_directory[0] = ((uint32_t)&exec_page_table[0]-HIGHER_HALF) | 0x3;
+	load_page_dir((uint32_t *)((uint32_t)&page_directory[0]-HIGHER_HALF));
+	((void(*)())0)();
+	exec_page_table[0] = 0x83;
 	load_page_dir((uint32_t *)((uint32_t)&page_directory[0]-HIGHER_HALF));
 }
 
