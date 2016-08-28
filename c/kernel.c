@@ -1,6 +1,8 @@
 #define HIGHER_HALF 0xC0000000
 
 #include "etc/common.h"
+#include "util/process/tss.h"
+#include "util/memory/gdt.h"
 #include "etc/multiboot.h"
 #include "drivers/VGA/VGA_13h.h"
 #include "util/print/print_util_80_25_char.h"
