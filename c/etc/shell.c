@@ -30,7 +30,6 @@ static void command_eval(char *cmd, char *args){
 		println("cat: Prints a file's contents.");
 		println("about: Prints some information.");
 		println("partinfo: Prints information about the current partition.");
-		println("exec: Executes a program. (DOESN'T WORK YET!)");
 		println("pagefault: Triggers a page fault, in case you wanted to.");
 		println("exit: Pretty self explanatory.");
 	}else if(strcmp(cmd,"ls")){
@@ -76,13 +75,6 @@ static void command_eval(char *cmd, char *args){
 		}else{
 			println("File doesn't exist!");
 		}
-	}else if(strcmp(cmd,"exec")){
-		fat32file f = getFile(args);
-		if(exists(f)){
-			executeFile(f);
-		}else{
-			println("File doesn't exist.");
-		}
 	}else if(strcmp(cmd,"pagefault")){
 		if(strcmp(args,"-r")){
 			char i = ((char*)0xDEADC0DE)[0];
@@ -96,8 +88,13 @@ static void command_eval(char *cmd, char *args){
 	}else if(strcmp(cmd,"exit")){
 		exitShell = true;
 	}else{
-		print("\"");
-		print(cmd);
-		println("\" is not a recognized command.");
+		fat32file f = getFile(cmd);
+		if(exists(f) && !isDirectory(f))
+			executeFile(f);
+		else{
+			print("\"");
+			print(cmd);
+			println("\" is not a recognized command, file, or program.");
+		}
 	}
 }

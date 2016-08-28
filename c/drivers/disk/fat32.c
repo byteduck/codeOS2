@@ -71,6 +71,8 @@ void listDir(uint32_t cluster, char *filter){
 		readSector(currentfat32part.disk, sector, buf);
 		for(uint8_t i = 0; i < 16; i++){
 			uint16_t loc = 0x20*i;
+			bool lcfn = ((buf[loc+0xC] >> 3) & 0x01); //If filename is all lowercase
+			bool lcex = ((buf[loc+0xC] >> 4) & 0x01); //If extension is all lowercase
 			if(buf[loc] != 0xE5 /*Is not unused*/ 
 					&& (buf[loc+0xB] & 0xF) != 0xF /*Is not a long filename entry*/ 
 					&& (buf[loc+0xB] & 0xA) == 0 /*Is a file or directory and should be shown*/
@@ -89,7 +91,15 @@ void listDir(uint32_t cluster, char *filter){
 				
 				if(buf[loc+0xB] & 0x10){ //Is a directory
 					char name[lastChar+2];
-					memcpy(&name, &buf[loc], lastChar+1);
+					for(int i = 0; i < lastChar+1; i++){
+						if(lcfn) //If filename is all lowercase
+							if(buf[loc+i] > 0x40 && buf[loc+i] < 0x5B) //If current character is a letter
+								name[i] = buf[loc+i]+32;
+							else
+								name[i] = buf[loc+i];
+						else
+							name[i] = buf[loc+i];
+					}
 					name[lastChar+1] = 0;
 					setColor(0x0a);
 					if(filtered){
@@ -102,9 +112,25 @@ void listDir(uint32_t cluster, char *filter){
 					}
 				}else{ //Is a file
 					char name[lastChar+6];
-					memcpy(&name, &buf[loc], lastChar+1);
-					if(!(buf[loc+9] == ' ' && buf[loc+10] == ' ' && buf[loc+11] == ' ')){ //If there is not no extension
-						memcpy(&name[lastChar+1], &buf[loc+7], 4);
+					for(int i = 0; i < lastChar+1; i++){
+						if(lcfn) //If filename is all lowercase
+							if(buf[loc+i] > 0x40 && buf[loc+i] < 0x5B) //If current character is a letter
+								name[i] = buf[loc+i]+32;
+							else
+								name[i] = buf[loc+i];
+						else
+							name[i] = buf[loc+i];
+					}
+					if(!(buf[loc+8] == ' ' && buf[loc+9] == ' ' && buf[loc+10] == ' ')){ //If there is not no extension
+						for(int i = 0; i < 3; i++){
+							if(lcex) //If extension is all lowercase
+								if(buf[loc+i+8] > 0x40 && buf[loc+i+8] < 0x5B) //If current character is a letter
+									name[i+lastChar+2] = buf[loc+8+i]+32;
+								else
+									name[i+lastChar+2] = buf[loc+8+i];
+							else
+								name[i+lastChar+2] = buf[loc+8+i];
+						}
 						name[lastChar+5] = 0;
 						name[lastChar+1] = '.';
 					}else{
@@ -250,6 +276,8 @@ fat32file getFile(char *file){ //If file doesn't have any clusters allocated to 
 		readSector(currentfat32part.disk, sector, buf);
 		for(uint8_t i = 0; i < 16; i++){
 			uint16_t loc = 0x20*i;
+			bool lcfn = ((buf[loc+0xC] >> 3) & 0x01); //If filename is all lowercase
+			bool lcex = ((buf[loc+0xC] >> 4) & 0x01); //If extension is all lowercase
 			if(buf[loc] == 0){ //End of directory
 				done = true;
 				i = 16;
@@ -264,7 +292,15 @@ fat32file getFile(char *file){ //If file doesn't have any clusters allocated to 
 				}
 				if(buf[loc+0xB] & 0x10){ //Is a directory
 					char name[lastChar+2];
-					memcpy(&name, &buf[loc], lastChar+1);
+					for(int i = 0; i < lastChar+1; i++){
+						if(lcfn) //If filename is all lowercase
+							if(buf[loc+i] > 0x40 && buf[loc+i] < 0x5B) //If current character is a letter
+								name[i] = buf[loc+i]+32;
+							else
+								name[i] = buf[loc+i];
+						else
+							name[i] = buf[loc+i];
+					}
 					name[lastChar+1] = 0;
 					if(strcmp(name,file) && !done){
 						intbuf = 0;
@@ -285,9 +321,25 @@ fat32file getFile(char *file){ //If file doesn't have any clusters allocated to 
 					}
 				}else{ //Is a file
 					char name[lastChar+6];
-					memcpy(&name, &buf[loc], lastChar+1);
-					if(!(buf[loc+9] == ' ' && buf[loc+10] == ' ' && buf[loc+11] == ' ')){ //If there is not no extension
-						memcpy(&name[lastChar+1], &buf[loc+7], 4);
+					for(int i = 0; i < lastChar+1; i++){
+						if(lcfn) //If filename is all lowercase
+							if(buf[loc+i] > 0x40 && buf[loc+i] < 0x5B) //If current character is a letter
+								name[i] = buf[loc+i]+32;
+							else
+								name[i] = buf[loc+i];
+						else
+							name[i] = buf[loc+i];
+					}
+					if(!(buf[loc+8] == ' ' && buf[loc+9] == ' ' && buf[loc+10] == ' ')){ //If there is not no extension
+						for(int i = 0; i < 3; i++){
+							if(lcex) //If extension is all lowercase
+								if(buf[loc+i+8] > 0x40 && buf[loc+i+8] < 0x5B) //If current character is a letter
+									name[i+lastChar+2] = buf[loc+8+i]+32;
+								else
+									name[i+lastChar+2] = buf[loc+8+i];
+							else
+								name[i+lastChar+2] = buf[loc+8+i];
+						}
 						name[lastChar+5] = 0;
 						name[lastChar+1] = '.';
 					}else{

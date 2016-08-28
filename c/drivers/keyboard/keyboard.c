@@ -53,11 +53,11 @@ void keyboard_handler(struct registers *r){
     }
 }
 
-void getInput(){ //Puts characters into kbdbuf until enter is pressed or you surpass 255 characters
+void getInput(){ //Puts characters into kbdbuf until enter is pressed or you reach 255 characters
 	input_mode = true;
 	input_done = false;
 	input_i = 0;
-	while(!input_done && input_i <= 255){}
+	while(!input_done && input_i < 255){}
 	kbdbuf[input_i] = '\0';
 	input_mode = false;
 }
