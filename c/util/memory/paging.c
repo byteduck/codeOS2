@@ -6,9 +6,9 @@ uint32_t krnlendPhys = (uint32_t)&krnlend-HIGHER_HALF;
 extern uint32_t BootPageDirectory;
 
 void setupPaging(){
-	/*uint32_t i,j;
+	uint32_t i,j;
 	page_directory[0]= 0x83;
-	for(i = 1; i < (HIGHER_HALF >> 24); i++){
+	for(i = 1; i < (HIGHER_HALF >> 22); i++){
 		page_directory[i] = 0x0;
 	}
 	page_directory[i] = 0x83;
@@ -16,8 +16,8 @@ void setupPaging(){
 	for(i=i; i < 1024; i++){
 		page_directory[i] = 0;
 	}
-	uint32_t *d = (uint32_t*)0x1000;*/
-	load_page_dir((uint32_t *)((uint32_t)&BootPageDirectory-HIGHER_HALF));
+	uint32_t *d = (uint32_t*)0x1000;
+	load_page_dir((uint32_t *)((uint32_t)&page_directory[0]-HIGHER_HALF));
 }
 
 void pageFaultHandler(struct registers *r){
