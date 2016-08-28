@@ -1,24 +1,12 @@
-#define HIGHER_HALF 0xC0000000
-
-#include "etc/common.h"
-#include "util/process/tss.h"
-#include "util/memory/gdt.h"
-#include "etc/multiboot.h"
-#include "drivers/VGA/VGA_13h.h"
-#include "util/print/print_util_80_25_char.h"
-#include "util/draw/draw_util.h"
-#include "etc/logo.h"
-#include "util/memory/heap.h"
-#include "util/memory/paging.h"
-#include "util/interrupt/idt.h"
-#include "util/interrupt/isr.h"
-#include "util/interrupt/irq.h"
-#include "util/interrupt/syscall.h"
-#include "drivers/disk/pio.h"
-#include "drivers/disk/fat32.h"
-#include "drivers/keyboard/keyboard.h"
-#include "etc/shell.h"
-#include "util/interrupt/pit.h"
+#include "common.h"
+#include "multiboot.h"
+#include "fat32.h"
+#include "shell.h"
+#include "gdt.h"
+#include "idt.h"
+#include "isr.h"
+#include "irq.h"
+#include "pit.h"
 
 extern void syscall_handler();
 extern void load_gdt();
@@ -34,6 +22,7 @@ int kmain(uint32_t mbootptr){
 	init_heap();
 	parse_mboot(mbootptr+HIGHER_HALF);
 	clearScreen();
+	printHexl(&krnlstart);
 	center_print("Now in 32-bit protected mode!",0x07);
 	//drawMonoBitmap(logo,320,50,0,0,0x2f);
 	//ypos = 7;
