@@ -464,7 +464,6 @@ void executeFile(fat32file file){ //DOES NOT WORK YET, an executable will only w
 		bool done = false;
 		uint32_t ccluster = file.cluster;
 		readSector(currentfat32part.disk, clusterToLBA(ccluster), ebuf);
-		//load_page_dir(exec_page_directory);
 		exec(ebuf);
 		println("");
 	}
