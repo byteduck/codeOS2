@@ -1,6 +1,6 @@
 #include "gdt.h"
 
-#define GDT_ENTRIES 5
+#define GDT_ENTRIES 6
 GDTEntry gdt[GDT_ENTRIES];
 GDTPointer gp;
 
@@ -26,6 +26,7 @@ void load_gdt(){
     gdt_set_gate(1, 0, 0xFFFFFFFF, 0b10011010, 0b11001111); //Kernel Code
     gdt_set_gate(2, 0, 0xFFFFFFFF, 0b10010010, 0b11001111); //Kernel Data
 	gdt_set_gate(3, 0, 0xFFFFFFFF, 0b11111010, 0b11001111); //User code
+	gdt_set_gate(4, 0, 0xFFFFFFFF, 0b11110010, 0b11001111); //User data
 	gdt_set_gate(4, 0, 0xFFFFFFFF, 0b11110010, 0b11001111); //User data
 
     gdt_flush();
