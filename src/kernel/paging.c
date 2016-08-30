@@ -1,3 +1,7 @@
+#include <common.h>
+#include <stdio.h>
+#include <paging.h>
+
 uint32_t page_directory[1024] __attribute__((aligned(4096)));
 uint32_t exec_page_table[1024] __attribute__((aligned(4096)));
 uint32_t krnlstartPhys = (uint32_t)&krnlstart-HIGHER_HALF;

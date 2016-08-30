@@ -1,3 +1,6 @@
+#ifndef EHCI_H
+#define EHCI_H
+
 typedef struct EHCIController{
 	PCIDevice pciDevice;
 	uint8_t flags;
@@ -5,4 +8,5 @@ typedef struct EHCIController{
 
 EHCIController getFirstEHCIController();
 void EHCIDebug();
-#include "ehci.c"
+
+#endif

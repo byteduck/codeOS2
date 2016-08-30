@@ -1,3 +1,9 @@
+#include <common.h>
+#include <paging.h>
+#include <stdio.h>
+#include <idt.h>
+#include <isr.h>
+
 void isr_init(){
 	idt_set_gate(0, (unsigned)isr0, 0x08, 0x8E);
     idt_set_gate(1, (unsigned)isr1, 0x08, 0x8E);

@@ -1,3 +1,6 @@
+#ifndef ISR_H
+#define ISR_H
+
 extern void isr0();
 extern void isr1();
 extern void isr2();
@@ -35,4 +38,4 @@ void isr_init();
 
 void fault_handler(struct registers *r);
 
-#include "isr.c"
+#endif

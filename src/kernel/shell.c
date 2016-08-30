@@ -1,6 +1,15 @@
+#include <common.h>
+#include <fat32.h>
+#include <keyboard.h>
+#include <stdio.h>
+#include <shell.h>
+
 char cmdbuf[256];
 char argbuf[256];
 bool exitShell = false;
+extern bool shell_mode;
+extern uint8_t kbdbuf[256];
+extern fat32part currentfat32part;
 
 void shell(){
 	while(!exitShell){

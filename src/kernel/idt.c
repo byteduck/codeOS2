@@ -1,3 +1,6 @@
+#include <common.h>
+#include <idt.h>
+
 struct IDTEntry idt[256];
 struct IDTPointer idtp;
 

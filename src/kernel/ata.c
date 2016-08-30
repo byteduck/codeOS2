@@ -1,3 +1,6 @@
+#include <common.h>
+#include <ata.h>
+
 /*
 * This system is to read disks formatted with an MBR only.
 * For reading specific filesystems, see the respective files in c/drivers/disk.

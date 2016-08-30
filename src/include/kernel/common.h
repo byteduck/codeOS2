@@ -1,3 +1,10 @@
+#ifndef COMMON_H
+#define COMMON_H
+
+#define HIGHER_HALF 0xC0000000
+#define true 1
+#define false 0
+
 typedef unsigned int   uint32_t;
 typedef          int   sint32_t;
 typedef unsigned short uint16_t;
@@ -39,7 +46,8 @@ void substri(int i, char *src, char *dest);
 void substrr(int s, int e, char *src, char *dest);
 void strcpy(char *src, char *dest);
 int countOf(char c, char *str);
+bool contains(char *str, char *cont);
 void cli();
 void sti();
 
-#include "common.c"
+#endif

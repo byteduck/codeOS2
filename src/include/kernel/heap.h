@@ -1,3 +1,6 @@
+#ifndef HEAP_H
+#define HEAP_H
+
 typedef struct Frame{
 	uint32_t num; //The number of the frame.
 	uint32_t set; //The set the frame is in (There are 8 frames in a set)
@@ -21,4 +24,4 @@ void kfree(void *ptr, uint32_t len);
 char *String(char *str);
 void strfree(char *str);
 
-#include "heap.c"
+#endif

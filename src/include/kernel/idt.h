@@ -1,3 +1,6 @@
+#ifndef IDT_H
+#define IDT_H
+
 struct IDTEntry{
 	unsigned short offset_low;  //Offset bits 0-15
 	unsigned short selector;    //A code segment selector in the GDT
@@ -16,4 +19,4 @@ extern void idt_load();
 void idt_set_gate(uint8_t num, uint32_t loc, uint16_t selector, uint8_t flags);
 void register_idt();
 
-#include "idt.c"
+#endif

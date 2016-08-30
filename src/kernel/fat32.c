@@ -1,6 +1,16 @@
+#include <common.h>
+#include <paging.h>
+#include <heap.h>
+#include <ata.h>
+#include <stdio.h>
+#include <fat32.h>
+
 const char *fat32sig = "FAT32   ";
 fat32part currentfat32part;
 char *cdir = 0;
+extern int xpos, ypos;
+extern uint8_t buf[256], buf2[256];
+
 bool isPartitionFAT32(int disk, int sect){
 	readSector(disk, sect, buf);
 	bool flag = true;

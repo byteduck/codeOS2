@@ -1,3 +1,6 @@
+#ifndef TSS_H
+#define TSS_H
+
 typedef struct TssEntry
 {
    uint32_t prev_tss;
@@ -31,3 +34,5 @@ typedef struct TssEntry
 
 uint16_t tss_high;
 uint8_t tss_low;
+
+#endif

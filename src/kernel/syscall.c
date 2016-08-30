@@ -1,3 +1,7 @@
+#include <common.h>
+#include <stdio.h>
+#include <syscall.h>
+
 void syscallHandler(uint32_t eax, uint32_t ebx){
 	switch(eax){
 		case 0:

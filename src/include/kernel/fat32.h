@@ -1,3 +1,6 @@
+#ifndef FAT32_H
+#define FAT32_H
+
 typedef struct fat32part{
 	uint8_t disk;
 	uint16_t part_sect;
@@ -38,5 +41,6 @@ uint32_t getNextCluster(uint32_t cluster);
 uint32_t getClusterOfFile(char *file);
 void printFileContents(fat32file f);
 void printCurrentDir();
+void executeFile(fat32file f);
 
-#include "fat32.c"
+#endif

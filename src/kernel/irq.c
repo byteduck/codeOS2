@@ -1,3 +1,7 @@
+#include <common.h>
+#include <idt.h>
+#include <irq.h>
+
 void *irq_routines[16] = {
 	0,0,0,0,0,0,0,0,
 	0,0,0,0,0,0,0,0

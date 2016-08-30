@@ -1,3 +1,7 @@
+#include <common.h>
+#include <stdio.h>
+#include <pci.h>
+
 uint16_t PCIReadWord(uint8_t bus, uint8_t slot, uint8_t func, uint8_t offset){
     uint32_t address;
     uint32_t lbus  = (uint32_t)bus;

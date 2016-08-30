@@ -1,3 +1,7 @@
+#include <common.h>
+#include <stdio.h>
+#include <heap.h>
+
 uint8_t heap_space[0x100000]; //1MiB of heap space
 uint8_t frames[0x2000];       //16byte Frames, 1 bit each. 1 = used, 0 = free
 Frame frbuf;

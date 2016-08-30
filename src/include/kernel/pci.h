@@ -1,3 +1,6 @@
+#ifndef PCI_H
+#define PCI_H
+
 typedef struct PCIDevice{
 	uint8_t bus;
 	uint8_t slot;
@@ -8,4 +11,5 @@ uint16_t getPCIVendor(uint8_t bus, uint8_t slot, uint8_t function);
 PCIDevice getPCIDevice(uint8_t class, uint8_t subClass, uint8_t progIF);
 void PCIDebug();
 void printPCIClassCode(uint8_t classCode, uint8_t subClass, uint8_t progIF);
-#include "pci.c"
+
+#endif

@@ -1,27 +1,22 @@
-#define HIGHER_HALF 0xC0000000
+#include <common.h>
+#include <common.h>
+#include <tss.h>
+#include <gdt.h>
+#include <multiboot.h>
+#include <stdio.h>
+#include <heap.h>
+#include <paging.h>
+#include <idt.h>
+#include <isr.h>
+#include <irq.h>
+#include <syscall.h>
+#include <ata.h>
+#include <fat32.h>
+#include <keyboard.h>
+#include <shell.h>
+#include <pit.h>
+#include <kmain.h>
 
-#include "common.h"
-#include "tss.h"
-#include "gdt.h"
-#include "multiboot.h"
-#include "stdio.h"
-#include "heap.h"
-#include "paging.h"
-#include "idt.h"
-#include "isr.h"
-#include "irq.h"
-#include "syscall.h"
-#include "ata.h"
-#include "fat32.h"
-#include "keyboard.h"
-#include "shell.h"
-#include "pit.h"
-
-extern void syscall_handler();
-extern void load_gdt();
-extern uint8_t boot_disk;
-void interrupts_init();
-void parse_mboot(uint32_t addr);
 int i;
 
 int kmain(uint32_t mbootptr){

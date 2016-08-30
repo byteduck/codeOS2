@@ -1,5 +1,5 @@
-#define true 1
-#define false 0
+#include <common.h>
+#include <common.h>
 
 void outb(uint16_t port, uint8_t value){
     asm volatile ("outb %1, %0" : : "dN" (port), "a" (value));

@@ -1,3 +1,9 @@
+#include <common.h>
+#include <heap.h>
+#include <stdio.h>
+#include <pci.h>
+#include <ehci.h>
+
 EHCIController getFirstEHCIController(){
 	PCIDevice device = getPCIDevice(0x0C,0x03,0x20);
 	EHCIController controller = {device,0};
