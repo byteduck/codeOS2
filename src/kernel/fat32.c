@@ -9,7 +9,7 @@ const char *fat32sig = "FAT32   ";
 fat32part currentfat32part;
 char *cdir = 0;
 extern int xpos, ypos;
-extern uint8_t buf[256], buf2[256];
+extern uint8_t buf[512], buf2[512];
 
 bool isPartitionFAT32(int disk, int sect){
 	readSector(disk, sect, buf);
@@ -456,7 +456,7 @@ void printFileContents(fat32file file){
 }
 
 
-uint8_t ebuf[256] __attribute__((aligned(4096)));
+uint8_t ebuf[512] __attribute__((aligned(4096)));
 void executeFile(fat32file file){ //DOES NOT WORK YET, an executable will only work if it doesn't access memory or jump.
 	if(exists(file)){
 		if(isDirectory(file)){
@@ -466,7 +466,6 @@ void executeFile(fat32file file){ //DOES NOT WORK YET, an executable will only w
 		bool done = false;
 		uint32_t ccluster = file.cluster;
 		readSector(currentfat32part.disk, clusterToLBA(ccluster), ebuf);
-		//load_page_dir(exec_page_directory);
 		exec(ebuf);
 		println("");
 	}

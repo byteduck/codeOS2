@@ -1,4 +1,4 @@
-
+@echo off
 cd asm
 nasm startup.asm -f elf -o ../tmp/startup.o
 cd ../src
