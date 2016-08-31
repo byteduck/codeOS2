@@ -31,7 +31,7 @@ int kmain(uint32_t mbootptr){
 	//ypos = 7;
 	uint8_t sect[512];
 	readSector(boot_disk, 0, sect);
-	if(sect[0] == 0xFF){
+	if(sect[1] == 0xFF){
 		println_color("WARNING: I think you may be booting codeOS2 off of a USB drive or other unsupported device. Disk reading functions may not work.",0x0C);
 	}
 	if(isPartitionFAT32(boot_disk,getFirstPartition(boot_disk))){

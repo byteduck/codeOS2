@@ -8,5 +8,5 @@ cd ../tmp
 i686-elf-ld -o ../out/disk/codeOS2/system/krnl32.sys *.o -T ../linker.ld
 del *.o
 cd ../out
-xcopy disk D: /s /e /y 1>NUL 2>NUL
+xcopy disk D: /s /e /y
 pause

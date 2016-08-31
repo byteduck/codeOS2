@@ -455,18 +455,41 @@ void printFileContents(fat32file file){
 	}
 }
 
+fat32part getCurrentFat32Part(){
+	return currentfat32part;
+}
 
-uint8_t ebuf[512] __attribute__((aligned(4096)));
-void executeFile(fat32file file){ //DOES NOT WORK YET, an executable will only work if it doesn't access memory or jump.
+//Please ignore how horrible this is atm
+//This is a VERY VERY VERY rudimentary executable implementation
+//Executables run in kernel space, and they are put into the main kernel heap.
+//I will definitely make a better system sometime in the future (Maybe *MAYBE* Elf loading) where programs run in userspace
+//and don't use a horrible system for memory allocation. But for now this is what we have.
+
+uint8_t prog[0x1000] __attribute__((aligned(0x1000))); //MAX 4KiB program size
+
+void executeFile(fat32file file){
 	if(exists(file)){
 		if(isDirectory(file)){
 			println("File is a directory.");
 			return;
+		}else if(file.size > 0x1000){
+			println("Executable is too large. (More than 4KiB)");
+			println("This is stupid, I know.");
+			return;
 		}
 		bool done = false;
 		uint32_t ccluster = file.cluster;
-		readSector(currentfat32part.disk, clusterToLBA(ccluster), ebuf);
-		exec(ebuf);
+		uint32_t csector = 0;
+		while(!done){
+			for(int j = 0; j < currentfat32part.sectors_per_cluster; j++){
+				readSector(currentfat32part.disk, clusterToLBA(ccluster)+j, &prog[csector*512]);
+				csector++;
+			}
+			ccluster = getNextCluster(ccluster);
+			if(ccluster >= 0x0FFFFFF8)
+				done = true;
+		}
+		exec(prog);
 		println("");
 	}
 }

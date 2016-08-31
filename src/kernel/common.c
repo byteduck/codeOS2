@@ -47,7 +47,7 @@ void *memset(void *dest, char val, int count){
     return dest;
 }
 
-void *memcpy(void *dest, const void *src, int count){
+void *memcpy(void *dest, const void *src, size_t count){
     const char *sp = (const char *)src;
     char *dp = (char *)dest;
     for(; count != 0; count--) *dp++ = *sp++;

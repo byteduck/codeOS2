@@ -8,13 +8,13 @@ Frame frbuf;
 FrameSet frsbuf;
 
 void init_heap(){
-	for(int i = 0; i < 0x20; i++){
+	for(int i = 0; i < 0x2000; i++){
 		frames[i] = 0;
 	}
 }
 
 Frame first_available_frame(){
-	for(int i = 0; i < 0x20; i++){
+	for(int i = 0; i < 0x2000; i++){
 		for(int j = 0; j < 8; j++){
 			if(!(frames[i] >> j & 1)){
 				frbuf.num = i*8+j;
@@ -27,9 +27,9 @@ Frame first_available_frame(){
 	PANIC("NO_HEAP_SPACE","The heap ran out of memory.",true);
 }
 
-FrameSet first_available_frameset(uint32_t len){ //len is the amount of 4KiB frames, not bytes.
-	uint8_t numFrames = 0;
-	for(int i = 0; i < 0x20; i++){
+FrameSet first_available_frameset(uint32_t len){ //len is the amount of 16byte frames, not bytes.
+	uint32_t numFrames = 0;
+	for(int i = 0; i < 0x2000; i++){
 		for(int j = 0; j < 8; j++){
 			if(!(frames[i] >> j & 1)){
 				if(numFrames == 0){
@@ -48,7 +48,9 @@ FrameSet first_available_frameset(uint32_t len){ //len is the amount of 4KiB fra
 			}
 		}
 	}
-	PANIC("NO_VAR_SPACE","The heap doesn't have enough consecutive frames to fit a variable.",true);
+	PANIC("NO_VAR_SPACE","The heap doesn't have enough consecutive frames to fit a variable.",false);
+	print("Variable size: ~"); printHexl(len*16); println("bytes");
+	while(true);
 }
 
 FrameSet fsalloc(uint32_t len){

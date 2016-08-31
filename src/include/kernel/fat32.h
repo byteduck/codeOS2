@@ -42,5 +42,6 @@ uint32_t getClusterOfFile(char *file);
 void printFileContents(fat32file f);
 void printCurrentDir();
 void executeFile(fat32file f);
+fat32part getCurrentFat32Part();
 
 #endif

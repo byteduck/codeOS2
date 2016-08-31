@@ -4,6 +4,7 @@
 #define HIGHER_HALF 0xC0000000
 #define true 1
 #define false 0
+#define NULL ( (void *) 0)
 
 typedef unsigned int   uint32_t;
 typedef          int   sint32_t;
@@ -13,6 +14,9 @@ typedef unsigned char  uint8_t;
 typedef          char  sint8_t;
 typedef char *string;
 typedef unsigned char bool;
+typedef int int32_t;
+typedef uint32_t size_t;
+typedef unsigned int uint;
 
 extern uint32_t krnlstart;
 extern uint32_t krnlend;
@@ -33,7 +37,7 @@ uint32_t inl(uint16_t port);
 int sgn(int x);
 int abs(float x);
 void *memset(void *dest, char val, int count);
-void *memcpy(void *dest, const void *src, int count);
+void *memcpy(void *dest, const void *src, size_t count);
 void numToHexString(uint8_t num, char *str);
 char nibbleToHexString(uint8_t num);
 bool isACharacter(uint8_t num);
