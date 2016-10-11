@@ -1,0 +1,1 @@
+cp out/disk/* /media/codepixl/CODEOS2 -r

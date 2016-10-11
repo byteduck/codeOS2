@@ -57,11 +57,11 @@ start_hh:
 	int 0x80
 	jmp $
 
-;%include 'vesa.asm' I still gotta figure out how to deal with this in 32-bit mode
-%include 'gdt.asm'
-%include 'syscall.asm'
-%include 'int.asm'
-%include 'paging.asm'
+;%include 'asm/vesa.asm' I still gotta figure out how to deal with this in 32-bit mode
+%include 'asm/gdt.asm'
+%include 'asm/syscall.asm'
+%include 'asm/int.asm'
+%include 'asm/paging.asm'
 
 section .bss
 align 32

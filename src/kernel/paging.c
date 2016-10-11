@@ -4,8 +4,8 @@
 
 uint32_t page_directory[1024] __attribute__((aligned(4096)));
 uint32_t exec_page_table[1024] __attribute__((aligned(4096)));
-uint32_t krnlstartPhys = (uint32_t)&krnlstart-HIGHER_HALF;
-uint32_t krnlendPhys = (uint32_t)&krnlend-HIGHER_HALF;
+#define krnlstartPhys = &kernelstart-HIGHER_HALF;
+#define krnlendPhys = &krnlend-HIGHER_HALF;
 extern uint32_t BootPageDirectory;
 
 void setupPaging(){
@@ -34,34 +34,34 @@ void exec(uint8_t *prog){
 
 void pageFaultHandler(struct registers *r){
 	cli();
-	unsigned int err_pos;
-	asm volatile ("mov %%cr2, %0" : "=r" (err_pos));
+	//uint32_t err_pos;
+	//asm("movd %0, %%cr2" : "=r" (err_pos));
 	bool other = false;
 	switch(r->err_code){
 		case 0:
 		case 1:
-			PANIC("KRNL_READ_NONPAGED_AREA", "Occurred at:", false);
+			PANIC("KRNL_READ_NONPAGED_AREA", "", false);
 			break;
 		case 2:
 		case 3:
-			PANIC("KRNL_WRITE_NONPAGED_AREA", "Occurred at:", false);
+			PANIC("KRNL_WRITE_NONPAGED_AREA", "", false);
 			break;
 		case 4:
 		case 5:
-			PANIC("USR_READ_NONPAGED_AREA", "Occurred at:", false);
+			PANIC("USR_READ_NONPAGED_AREA", "", false);
 			break;
 		case 6:
 		case 7:
-			PANIC("USR_WRITE_NONPAGED_AREA", "Occurred at:", false);
+			PANIC("USR_WRITE_NONPAGED_AREA", "", false);
 			break;
 		default:
-			PANIC("UNKNOWN_PAGE_FAULT", "Occurred at:", false);
+			PANIC("UNKNOWN_PAGE_FAULT", "", false);
 			other = true;
 			break;
 	}
 	
-	printHexl(err_pos);
-	println("");
+	//printHexl(err_pos);
+	//println("");
 	if(other){
 		print("Error Code: ");
 		printHex(r->err_code);
