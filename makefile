@@ -9,7 +9,7 @@ LD = ld
 codeos2: $(CFILES)
 	mv src/kernel/*.o .
 	nasm asm/startup.asm -f elf -o startup.o
-	ld -o out/disk/codeos2/system/krnl32.sys *.o -T linker.ld -melf_i386
+	ld -o out/disk/codeos2/system/krnl32 *.o -T linker.ld -melf_i386
 	rm *.o
 
 %.o: %.c
