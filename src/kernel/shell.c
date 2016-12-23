@@ -75,9 +75,12 @@ static void command_eval(char *cmd, char *args){
 		print("Disk: ");
 		printHex(current_ext2_partition.disk);
 		print("\nBlock size: ");
-		printHexw(getBlockSize(current_ext2_partition.superblock));
+		printHexw(getBlockSize(getCurrentSuperblock()));
+		print("\ninode size: ");
+		printHexw(getCurrentSuperblock()->inode_size);
 		print("\nBlocks per group: ");
-		printHexl(current_ext2_partition.superblock->blocks_per_group);
+		printHexl(getCurrentSuperblock()->blocks_per_group);
+		println("\n");
 	}/*else if(strcmp(cmd,"cat")){
 		fat32file f = getFile(args);
 		if(exists(f)){

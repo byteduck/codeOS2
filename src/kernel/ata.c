@@ -29,6 +29,12 @@ void readSector(int disk, int address, uint8_t *sect){
 	}
 }
 
+void readSectors(int disk, int address, int sectors, uint8_t *sect){
+	for(int i = 0; i < sectors; i++){
+		readSector(disk,address+i,sect+i*512);
+	}
+}
+
 int getFirstPartition(int disk){
 	prepareDisk(disk,0);
 	uint16_t pos = 0;

@@ -1,10 +1,24 @@
 #ifndef EXT2_H
 #define EXT2_H
 
-typedef struct ext2_superblock{
+//inode constants
+#define ROOT_INODE 2
+
+//inode types
+#define EXT2_DIRECTORY 0x4000
+#define EXT2_FILE 0x8000
+
+//inode flags
+#define EXT2_SYNCHRONOUS 0x8
+#define EXT2_IMMUTABLE 0x10
+#define EXT2_APPEND_ONLY 0x20
+#define EXT2_DUMP_EXCLUDE 0x40
+#define EXT2_JOURNAL_FILE 0x40000
+
+typedef struct __attribute__((packed)) ext2_superblock{
 	uint32_t total_inodes;
 	uint32_t total_blocks;
-	uint32_t super_blocks;
+	uint32_t superuser_blocks;
 	uint32_t unallocated_blocks;
 	uint32_t unallocated_inodes;
 	uint32_t superblock_block;
@@ -45,19 +59,60 @@ typedef struct ext2_superblock{
 	uint32_t journal_inode;
 	uint32_t journal_device;
 	uint32_t orphan_inode_head;
-	uint8_t extra[273];
+	uint8_t extra[276];
 } ext2_superblock;
 
-typedef struct ext2_partition{
+typedef struct __attribute__((packed)) ext2_partition{
 	uint32_t sector;
 	uint8_t disk;
+	uint32_t block_group_descriptor_table;
 	ext2_superblock *superblock;
 	
 } ext2_partition;
+
+typedef struct __attribute__((packed)) ext2_block_group_descriptor{
+	uint32_t block_usage_bitmap;
+	uint32_t inode_usage_bitmap;
+	uint32_t inode_table;
+	uint16_t unallocated_blocks;
+	uint16_t allocated_blocks;
+	uint16_t num_directories;
+	uint8_t unused[14];
+} ext2_block_group_descriptor;
+
+typedef struct __attribute__((packed)) ext2_inode{
+	uint16_t permissions;
+	uint16_t user_id;
+	uint32_t size_lower;
+	uint32_t last_access_time;
+	uint32_t creation_time;
+	uint32_t last_modification_time;
+	uint32_t deletion_time;
+	uint16_t group_id;
+	uint16_t hard_links; //Hard links to this node
+	uint32_t sectors_in_use; //Hard disk sectors, not ext2 blocks.
+	uint32_t flags;
+	uint32_t os_specific_1;
+	uint32_t block_pointers[12];
+	uint32_t single_indirect_block_pointer;
+	uint32_t double_indirect_block_pointer;
+	uint32_t triple_indirect_block_pointer;
+	uint32_t generation_number;
+	uint32_t extended_attribute_block;
+	uint32_t size_upper;
+	uint32_t block_address;
+	uint32_t os_specific_2[3];
+} ext2_inode;
 
 bool isPartitionExt2(int disk, int sect);
 void getExt2Superblock(int disk, int sect, ext2_superblock *sp);
 void setCurrentExt2Partition(int sect, uint8_t disk, ext2_superblock *sb);
 uint32_t getBlockSize(ext2_superblock *sb);
+uint32_t getBlockGroupOfInode(uint32_t inode);
+uint32_t getIndexOfInode(uint32_t inode);
+uint32_t getBlockOfInode(uint32_t inode);
+void printBlockGroupDescriptorTable();
+ext2_superblock *getCurrentSuperblock();
+uint32_t blockToSector(uint32_t block);
 
 #endif
