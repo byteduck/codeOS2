@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <shell.h>
 #include <ext2.h>
+#include <heap.h>
 
 char cmdbuf[256];
 char argbuf[256];
@@ -72,15 +73,17 @@ static void command_eval(char *cmd, char *args){
 	}else if(strcmp(cmd,"about")){
 		println("CodeOS2 v0.0");
 	}*/else if(strcmp(cmd, "partinfo")){
-		print("Disk: ");
-		printHex(current_ext2_partition.disk);
-		print("\nBlock size: ");
-		printHexw(getBlockSize(getCurrentSuperblock()));
-		print("\ninode size: ");
-		printHexw(getCurrentSuperblock()->inode_size);
-		print("\nBlocks per group: ");
-		printHexl(getCurrentSuperblock()->blocks_per_group);
-		println("\n");
+		printf("Disk: %d\nBlock size: %d (%d sectors)\nBlocks per group: %d (%d block groups)\nInodes per group: %d\nSuperblock sector: %d\nInode table size: %d blocks\nName: %s\n",
+		current_ext2_partition.disk, ext2_getBlockSize(), current_ext2_partition.sectors_per_block, ext2_getCurrentSuperblock()->blocks_per_group, current_ext2_partition.num_block_groups, ext2_getCurrentSuperblock()->inodes_per_group, current_ext2_partition.sector+2, current_ext2_partition.blocks_per_inode_table, ext2_getCurrentSuperblock()->volume_name);
+	}else if(strcmp(cmd, "inode")){
+		if(strcmp(args, ""))
+			printf("Usage: \ninode <inode #> - prints information about an inode.\n");
+		else{
+			ext2_inode *inode = kmalloc(sizeof(ext2_inode));
+			ext2_readInode(strToInt(args),inode);
+			printf("inode %d:\n",strToInt(args));
+			printf("inode type: %d\ninode size: %d bytes\n", inode->type, inode->size_lower);
+		}
 	}/*else if(strcmp(cmd,"cat")){
 		fat32file f = getFile(args);
 		if(exists(f)){

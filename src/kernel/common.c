@@ -89,11 +89,12 @@ char *itoa(int i, char *p, int base){
 			}while(i);
 		break;
 		case 16:
+			print("[ITOA 16 DOES NOT WORK PROPERLY]");
 			for(uint32_t a = 0xF0000000; a > 0; a = a >> 4)
 				if((i&a) != 0) nbcount++;
 			int ind = nbcount;
 			for(ind > 0; ind--;)
-				p[-ind+nbcount-1] = nibbleToHexString((i >> ((ind)*4)) & 0xFF);
+				p[-ind+nbcount-1] = nibbleToHexString((i >> ((ind)*4)) & 0xF);
 			p[nbcount] = '\0';
 		break;
 	}
@@ -197,6 +198,15 @@ bool contains(char *str, char *cont){ //Returns true if str has cont in it.
 		i++;
 	}
 	return flaga;
+}
+
+int strToInt(char *str){
+	int len = strlen(str);
+	int ret = 0;
+	for(int i = 0; i < len; i++){
+		ret = ret * 10 + (str[i] - '0');
+	}
+	return ret;
 }
 
 void cli(){

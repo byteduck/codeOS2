@@ -70,5 +70,6 @@ int countOf(char c, char *str);
 bool contains(char *str, char *cont);
 void cli();
 void sti();
+int strToInt(char *str);
 
 #endif

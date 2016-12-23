@@ -49,10 +49,10 @@ int kmain(uint32_t mbootptr){
 		while(true);
 	}
 	setCurrentExt2Partition(fp,boot_disk,&sb);
-	if(getCurrentSuperblock()->inode_size != 128){
-		printf("Unsupported inode size %d. codeOS2 only supports an inode size of 128 at this time.", getCurrentSuperblock()->inode_size);
+	if(ext2_getCurrentSuperblock()->inode_size != 128){
+		printf("Unsupported inode size %d. codeOS2 only supports an inode size of 128 at this time.", ext2_getCurrentSuperblock()->inode_size);
 	}
-	//printBlockGroupDescriptorTable();
+	printf("root inode information: ");
 	shell();
 }
 

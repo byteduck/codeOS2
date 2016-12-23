@@ -42,7 +42,7 @@ typedef struct __attribute__((packed)) ext2_superblock{
 	uint16_t reserved_user;
 	uint16_t reserved_group; 
 	//Start extended fields
-	uint32_t first_non_reserved_inode;
+	uint32_t first_inode;
 	uint16_t inode_size;
 	uint16_t superblock_group;
 	uint32_t optional_features;
@@ -66,6 +66,12 @@ typedef struct __attribute__((packed)) ext2_partition{
 	uint32_t sector;
 	uint8_t disk;
 	uint32_t block_group_descriptor_table;
+	uint32_t blocks_per_inode_table;
+	uint32_t sectors_per_inode_table;
+	uint32_t block_size;
+	uint32_t sectors_per_block;
+	uint32_t num_block_groups;
+	uint32_t inodes_per_block;
 	ext2_superblock *superblock;
 	
 } ext2_partition;
@@ -81,7 +87,7 @@ typedef struct __attribute__((packed)) ext2_block_group_descriptor{
 } ext2_block_group_descriptor;
 
 typedef struct __attribute__((packed)) ext2_inode{
-	uint16_t permissions;
+	uint16_t type;
 	uint16_t user_id;
 	uint32_t size_lower;
 	uint32_t last_access_time;
@@ -107,12 +113,15 @@ typedef struct __attribute__((packed)) ext2_inode{
 bool isPartitionExt2(int disk, int sect);
 void getExt2Superblock(int disk, int sect, ext2_superblock *sp);
 void setCurrentExt2Partition(int sect, uint8_t disk, ext2_superblock *sb);
-uint32_t getBlockSize(ext2_superblock *sb);
-uint32_t getBlockGroupOfInode(uint32_t inode);
-uint32_t getIndexOfInode(uint32_t inode);
-uint32_t getBlockOfInode(uint32_t inode);
-void printBlockGroupDescriptorTable();
-ext2_superblock *getCurrentSuperblock();
-uint32_t blockToSector(uint32_t block);
+uint32_t ext2_getBlockSize();
+uint32_t ext2_getBlockGroupOfInode(uint32_t inode);
+uint32_t ext2_getIndexOfInode(uint32_t inode);
+uint32_t ext2_getBlockOfInode(uint32_t inode);
+void ext2_readInode(uint32_t inode, ext2_inode *buf);
+ext2_superblock *ext2_getCurrentSuperblock();
+uint8_t *ext2_allocBlock();
+void ext2_freeBlock(uint8_t *block);
+uint32_t ext2_blockToSector(uint32_t block);
+uint8_t *ext2_readBlock(uint32_t block, uint8_t *buf);
 
 #endif
