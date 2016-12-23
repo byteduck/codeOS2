@@ -1,5 +1,5 @@
 #include <common.h>
-#include <common.h>
+#include <stdio.h>
 
 void outb(uint16_t port, uint8_t value){
     asm volatile ("outb %1, %0" : : "dN" (port), "a" (value));
@@ -66,6 +66,38 @@ char nibbleToHexString(uint8_t num){
 	}else{
 		return tmp+0x37;
 	}
+}
+
+char *itoa(int i, char *p, int base){
+	char const digit[] = "0123456789";
+	int nbcount = 0;
+	switch(base){
+		case 10:
+			if(i<0){
+				*p++ = '-';
+				i *= -1;
+			}
+			int shifter = i;
+			do{
+				++p;
+				shifter = shifter/10;
+			}while(shifter);
+				*p = '\0';
+			do{
+				*--p = digit[i%10];
+				i = i/10;
+			}while(i);
+		break;
+		case 16:
+			for(uint32_t a = 0xF0000000; a > 0; a = a >> 4)
+				if((i&a) != 0) nbcount++;
+			int ind = nbcount;
+			for(ind > 0; ind--;)
+				p[-ind+nbcount-1] = nibbleToHexString((i >> ((ind)*4)) & 0xFF);
+			p[nbcount] = '\0';
+		break;
+	}
+	return p;
 }
 
 bool isACharacter(uint8_t num){

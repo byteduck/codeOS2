@@ -11,6 +11,8 @@ void center_print_base(char* c, char color, int width);
 void printHex(uint8_t num);
 void printHexw(uint16_t num);
 void printHexl(uint32_t num);
+void printNum(int num);
+void printf(char *fmt, ...);
 void backspace();
 void PANIC(char *error, char *msg, bool hang);
 void putch_color(char c, char color);

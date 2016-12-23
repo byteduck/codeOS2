@@ -1,19 +1,19 @@
 #include <common.h>
-#include <fat32.h>
 #include <keyboard.h>
 #include <stdio.h>
 #include <shell.h>
+#include <ext2.h>
 
 char cmdbuf[256];
 char argbuf[256];
 bool exitShell = false;
 extern bool shell_mode;
 extern uint8_t kbdbuf[256];
-extern fat32part currentfat32part;
+extern ext2_partition current_ext2_partition;
 
 void shell(){
 	while(!exitShell){
-		print("CodeOS2> ");
+		print("root@codeOS2:/$ ");
 		shell_mode = true;
 		getInput();
 		shell_mode = false;
@@ -41,7 +41,7 @@ static void command_eval(char *cmd, char *args){
 		println("partinfo: Prints information about the current partition.");
 		println("pagefault: Triggers a page fault, in case you wanted to.");
 		println("exit: Pretty self explanatory.");
-	}else if(strcmp(cmd,"ls")){
+	}/*else if(strcmp(cmd,"ls")){
 		if(strcmp(args,"-h")){
 			println("Usage: ls [contains]");
 		}else if(!strcmp(args,"")){
@@ -64,20 +64,21 @@ static void command_eval(char *cmd, char *args){
 		}
 	}else if(strcmp(cmd,"pwd")){
 		if(strcmp(args,"-c")){
-			printHex(currentfat32part.current_dir_clust);
+			//printHex(currentfat32part.current_dir_clust);
 			println("");
 		}else{
 			printCurrentDir();
 		}
 	}else if(strcmp(cmd,"about")){
 		println("CodeOS2 v0.0");
-	}else if(strcmp(cmd, "partinfo")){
+	}*/else if(strcmp(cmd, "partinfo")){
 		print("Disk: ");
-		printHex(currentfat32part.disk);
-		print("\nSectors per cluster: ");
-		printHex(currentfat32part.sectors_per_cluster);
-		println("");
-	}else if(strcmp(cmd,"cat")){
+		printHex(current_ext2_partition.disk);
+		print("\nBlock size: ");
+		printHexw(getBlockSize(current_ext2_partition.superblock));
+		print("\nBlocks per group: ");
+		printHexl(current_ext2_partition.superblock->blocks_per_group);
+	}/*else if(strcmp(cmd,"cat")){
 		fat32file f = getFile(args);
 		if(exists(f)){
 			printFileContents(f);
@@ -96,14 +97,14 @@ static void command_eval(char *cmd, char *args){
 		}
 	}else if(strcmp(cmd,"exit")){
 		exitShell = true;
-	}else{
-		fat32file f = getFile(cmd);
+	}*/else{
+		/*fat32file f = getFile(cmd);
 		if(exists(f) && !isDirectory(f))
 			executeFile(f);
-		else{
+		else{*/
 			print("\"");
 			print(cmd);
 			println("\" is not a recognized command, file, or program.");
-		}
+		//}
 	}
 }

@@ -12,6 +12,7 @@
 #include <syscall.h>
 #include <ata.h>
 #include <fat32.h>
+#include <ext2.h>
 #include <keyboard.h>
 #include <shell.h>
 #include <pit.h>
@@ -34,13 +35,19 @@ int kmain(uint32_t mbootptr){
 	if(sect[1] == 0xFF){
 		println_color("WARNING: I think you may be booting codeOS2 off of a USB drive or other unsupported device. Disk reading functions may not work.",0x0C);
 	}
-	if(isPartitionFAT32(boot_disk,getFirstPartition(boot_disk))){
-		println("Partition is FAT32!");
+	uint32_t fp = getFirstPartition(boot_disk);
+	if(isPartitionExt2(boot_disk,fp)){
+		println("Partition is ext2!");
 	}else{
-		println("Partition is not FAT32!");
+		println("Partition is not ext2!");
 	}
-	fat32part p = getFat32Part(boot_disk,getFirstPartition(boot_disk));
-	setCurrentFat32part(p);
+	ext2_superblock sb = {};
+	getExt2Superblock(boot_disk,fp,&sb);
+	if(sb.version_major < 1){
+		printf("Unsupported ext2 version %d.%d. Must be at least 1.", sb.version_major, sb.version_minor);
+		while(true);
+	}
+	setCurrentExt2Partition(fp,boot_disk,&sb);
 	shell();
 }
 

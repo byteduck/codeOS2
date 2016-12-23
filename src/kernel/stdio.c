@@ -113,6 +113,57 @@ void printHexl(uint32_t num){
 	print(str);
 }
 
+void printNum(int num){
+	char str[11];
+	itoa(num,str,10);
+	print(str);
+}
+
+void printf(char *fmt, ...){
+	const char *p;
+	va_list argp;
+	int i;
+	char *s;
+	char fmtbuf[256];
+
+	va_start(argp, fmt);
+
+	for(p = fmt; *p != '\0'; p++){
+	if(*p != '%'){
+		putch(*p);
+		continue;
+	}
+	switch(*++p){
+		case 'c':
+			i = va_arg(argp, int);
+			putch(i);
+			break;
+
+		case 'd':
+			i = va_arg(argp, int);
+			s = itoa(i, fmtbuf, 10);
+			print(s);
+			break;
+
+		case 's':
+			s = va_arg(argp, char *);
+			print(s);
+			break;
+
+		case 'x':
+			i = va_arg(argp, int);
+			s = itoa(i, fmtbuf, 16);
+			print(s);
+			break;
+
+		case '%':
+			putch('%');
+			break;
+		}
+	}
+	va_end(argp);
+}
+
 void backspace(){
 	if(xpos != 0){
 		xpos--;

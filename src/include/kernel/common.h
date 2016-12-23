@@ -6,6 +6,22 @@
 #define false 0
 #define NULL ( (void *) 0)
 
+#define __va_argsiz(t)	\
+	(((sizeof(t) + sizeof(int) - 1) / sizeof(int)) * sizeof(int))
+
+
+#define va_start(ap, pN)	\
+	((ap) = ((va_list) __builtin_next_arg(pN)))
+
+
+
+#define va_end(ap)	((void)0)
+
+#define va_arg(ap, t)					\
+	 (((ap) = (ap) + __va_argsiz(t)),		\
+	  *((t*) (void*) ((ap) - __va_argsiz(t))))
+
+typedef char* va_list;
 typedef unsigned int   uint32_t;
 typedef          int   sint32_t;
 typedef unsigned short uint16_t;
@@ -40,6 +56,7 @@ void *memset(void *dest, char val, int count);
 void *memcpy(void *dest, const void *src, size_t count);
 void numToHexString(uint8_t num, char *str);
 char nibbleToHexString(uint8_t num);
+char *itoa(int i, char *p, int base);
 bool isACharacter(uint8_t num);
 int strlen(const char *str);
 bool strcmp(char *str1, char *str2);
