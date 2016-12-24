@@ -156,6 +156,13 @@ void printf(char *fmt, ...){
 			print(s);
 			break;
 
+		case 'X':
+			i = va_arg(argp, int);
+			s = itoa(i, fmtbuf, 16);
+			toUpper(s);
+			print(s);
+			break;
+
 		case 'b':
 			i = va_arg(argp, int);
 			s = itoa(i, fmtbuf, 2);

@@ -7,14 +7,16 @@
 
 char cmdbuf[256];
 char argbuf[256];
+char dirbuf[512];
 bool exitShell = false;
+uint32_t current_inode = 2;
 extern bool shell_mode;
 extern uint8_t kbdbuf[256];
 extern ext2_partition current_ext2_partition;
 
 void shell(){
 	while(!exitShell){
-		print("root@codeOS2:/$ ");
+		print("codeOS2:/$ ");
 		shell_mode = true;
 		getInput();
 		shell_mode = false;
@@ -42,37 +44,25 @@ static void command_eval(char *cmd, char *args){
 		println("partinfo: Prints information about the current partition.");
 		println("pagefault: Triggers a page fault, in case you wanted to.");
 		println("exit: Pretty self explanatory.");
-	}/*else if(strcmp(cmd,"ls")){
-		if(strcmp(args,"-h")){
-			println("Usage: ls [contains]");
-		}else if(!strcmp(args,"")){
-			listCurrentDir(args);
-		}else{
-			listCurrentDir("");
-		}
+	}else if(strcmp(cmd,"ls")){
+		ext2_listDirectory(current_inode);
 	}else if(strcmp(cmd,"cd")){
-		switch(changeDir(args)){
-			case 1:
-			print("\"");
-			print(args);
-			println("\" is not a directory.");
-			break;
-			case 2:
-			print("\"");
-			print(args);
-			println("\" does not exist.");
-			break;
+		uint32_t inodeID = ext2_findFileInDirectory(args, current_inode);
+		if(!inodeID) printf("That directory does not exist.\n"); else{
+			ext2_inode *inode = kmalloc(sizeof(ext2_inode));
+			ext2_readInode(inodeID, inode);
+			if((inode->type & 0xF000) != EXT2_DIRECTORY) printf("%s is not a directory.\n",args); else current_inode = inodeID;
 		}
 	}else if(strcmp(cmd,"pwd")){
-		if(strcmp(args,"-c")){
+		/*if(strcmp(args,"-c")){
 			//printHex(currentfat32part.current_dir_clust);
 			println("");
 		}else{
 			printCurrentDir();
-		}
+		}*/
 	}else if(strcmp(cmd,"about")){
 		println("CodeOS2 v0.0");
-	}*/else if(strcmp(cmd, "partinfo")){
+	}else if(strcmp(cmd, "partinfo")){
 		printf("Disk: %d\nBlock size: %d (%d sectors)\nBlocks per group: %d (%d block groups)\nInodes per group: %d\nSuperblock sector: %d\nInode table size: %d blocks\nName: %s\n",
 		current_ext2_partition.disk, ext2_getBlockSize(), current_ext2_partition.sectors_per_block, ext2_getCurrentSuperblock()->blocks_per_group, current_ext2_partition.num_block_groups, ext2_getCurrentSuperblock()->inodes_per_group, current_ext2_partition.sector+2, current_ext2_partition.blocks_per_inode_table, ext2_getCurrentSuperblock()->volume_name);
 	}else if(strcmp(cmd, "inode")){
@@ -85,13 +75,13 @@ static void command_eval(char *cmd, char *args){
 			printf("inode type: 0x%x\ninode size: 0x%x bytes\n", inode->type, inode->size_lower);
 			printf("inode flags: %b\n", inode->flags);
 		}
-	}/*else if(strcmp(cmd,"cat")){
-		fat32file f = getFile(args);
+	}else if(strcmp(cmd,"cat")){
+		/*fat32file f = getFile(args);
 		if(exists(f)){
 			printFileContents(f);
 		}else{
 			println("File doesn't exist!");
-		}
+		}*/
 	}else if(strcmp(cmd,"pagefault")){
 		if(strcmp(args,"-r")){
 			char i = ((char*)0xDEADC0DE)[0];
@@ -104,7 +94,7 @@ static void command_eval(char *cmd, char *args){
 		}
 	}else if(strcmp(cmd,"exit")){
 		exitShell = true;
-	}*/else{
+	}else{
 		/*fat32file f = getFile(cmd);
 		if(exists(f) && !isDirectory(f))
 			executeFile(f);

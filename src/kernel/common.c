@@ -64,7 +64,7 @@ char nibbleToHexString(uint8_t num){
 	if(tmp < 0xA){
 		return tmp+0x30;
 	}else{
-		return tmp+0x37;
+		return tmp+0x57;
 	}
 }
 
@@ -122,7 +122,7 @@ int strlen(const char *str){
 bool strcmp(string str1,string str2){
     int i = 0;
 	bool flag = false;
-   
+
     while(str1[i]!='\0' && str2[i]!='\0'){
          if(str1[i]!=str2[i]){
              flag=1;
@@ -132,7 +132,7 @@ bool strcmp(string str1,string str2){
     }
 
     return flag == 0 && str1[i] == '\0' && str2[i] == '\0';
-	
+
 }
 
 int indexOf(char c, char *str){
@@ -221,4 +221,11 @@ void cli(){
 
 void sti(){
 	asm volatile("sti");
+}
+
+void toUpper(char *str){
+	while(*str != '\0'){
+		if(*str >= 'a' && *str <= 'z') *str = *str - ('a' - 'A');
+		*str++;
+	}
 }

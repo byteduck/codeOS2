@@ -5,13 +5,12 @@
 #include <stdio.h>
 #include <ext2.h>
 
-uint16_t ext2sig = 0x53ef;
-extern uint8_t buf[512], buf2[512];
+extern uint8_t ata_buf[512], ata_buf2[512];
 ext2_partition current_ext2_partition = {};
 
 bool isPartitionExt2(int disk, int sect){
-	readSector(disk, sect+2, buf); //Supercluster begins at partition sector + 2
-	return ((ext2_superblock *)buf)->signature != ext2sig;
+	readSector(disk, sect+2, ata_buf); //Supercluster begins at partition sector + 2
+	return ((ext2_superblock *)ata_buf)->signature != EXT2_SIGNATURE;
 }
 
 void getExt2Superblock(int disk, int sect, ext2_superblock *sp){
@@ -63,6 +62,57 @@ void ext2_readInode(uint32_t inode, ext2_inode *buf){
 	ext2_freeBlock(read);
 }
 
+void ext2_listDirectory(uint32_t inode_){
+	ext2_inode *inode = kmalloc(sizeof(inode));
+	ext2_readInode(inode_,inode);
+	if((inode->type & 0xF000) != EXT2_DIRECTORY){
+		printf("given inode is not a directory!\n");
+	}else{
+		uint8_t *buf = kmalloc(ext2_getBlockSize());
+		for(int i = 0; i < 12; i++){
+			uint32_t block = inode->block_pointers[i];
+			if(block == 0 || block > ext2_getCurrentSuperblock()->total_blocks) break;
+			ext2_readBlock(block, buf);
+			ext2_listDirectoryEntries((ext2_directory *)buf);
+		}
+	}
+}
+
+void ext2_listDirectoryEntries(ext2_directory *dir){
+	while(dir->inode != 0){
+		char *name = kmalloc(dir->name_length + 1);
+		name[dir->name_length] = '\0';
+		memcpy(name, &dir->type+1, dir->name_length);
+		if(name[0] != '.') printf("%s\n",name);
+		kfree(name, dir->name_length + 1);
+		dir = (ext2_directory *)((uint32_t)dir + dir->size);
+	}
+}
+
+uint32_t ext2_findFileInDirectory(char *find_name, uint32_t dir_inode){
+	ext2_inode *inode = kmalloc(sizeof(inode));
+	ext2_readInode(dir_inode,inode);
+	uint8_t *buf = kmalloc(ext2_getBlockSize());
+	for(int i = 0; i < 12; i++){
+		uint32_t block = inode->block_pointers[i];
+		if(block == 0 || block > ext2_getCurrentSuperblock()->total_blocks) break;
+		ext2_readBlock(block, buf);
+		ext2_directory *dir = (ext2_directory *)buf;
+		while(dir->inode != 0){
+			char *name = kmalloc(dir->name_length + 1);
+			name[dir->name_length] = '\0';
+			memcpy(name, &dir->type+1, dir->name_length);
+			if(strcmp(name, find_name)){
+				kfree(name, dir->name_length + 1);
+				return dir->inode;
+			}
+			kfree(name, dir->name_length + 1);
+			dir = (ext2_directory *)((uint32_t)dir + dir->size);
+		}
+	}
+	return 0;
+}
+
 ext2_superblock *ext2_getCurrentSuperblock(){
 	return current_ext2_partition.superblock;
 }
@@ -87,5 +137,3 @@ void ext2_freeBlock(uint8_t *block){
 uint32_t ext2_blockToSector(uint32_t block){
 	return current_ext2_partition.sector+(ext2_getBlockSize()/512)*block;
 }
-
-

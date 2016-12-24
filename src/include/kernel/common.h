@@ -22,12 +22,14 @@
 	  *((t*) (void*) ((ap) - __va_argsiz(t))))
 
 typedef char* va_list;
-typedef unsigned int   uint32_t;
-typedef          int   sint32_t;
-typedef unsigned short uint16_t;
-typedef          short sint16_t;
-typedef unsigned char  uint8_t;
-typedef          char  sint8_t;
+typedef unsigned int           uint32_t;
+typedef  signed  int           int32_t;
+typedef unsigned short         uint16_t;
+typedef  signed  short         int16_t;
+typedef unsigned char          uint8_t;
+typedef  signed  char          int8_t;
+typedef unsigned long long int uint64_t;
+typedef  signed  long long int int64_t;
 typedef char *string;
 typedef unsigned char bool;
 typedef int int32_t;
@@ -71,5 +73,6 @@ bool contains(char *str, char *cont);
 void cli();
 void sti();
 int strToInt(char *str);
+void toUpper(char *str);
 
 #endif

@@ -9,7 +9,8 @@ const char *fat32sig = "FAT32   ";
 fat32part currentfat32part;
 char *cdir = 0;
 extern int xpos, ypos;
-extern uint8_t buf[512], buf2[512];
+extern uint8_t ata_buf[512], ata_buf2[512];
+uint8_t *buf = ata_buf, *buf2 = ata_buf2;
 
 bool isPartitionFAT32(int disk, int sect){
 	readSector(disk, sect, buf);
@@ -83,8 +84,8 @@ void listDir(uint32_t cluster, char *filter){
 			uint16_t loc = 0x20*i;
 			bool lcfn = ((buf[loc+0xC] >> 3) & 0x01); //If filename is all lowercase
 			bool lcex = ((buf[loc+0xC] >> 4) & 0x01); //If extension is all lowercase
-			if(buf[loc] != 0xE5 /*Is not unused*/ 
-					&& (buf[loc+0xB] & 0xF) != 0xF /*Is not a long filename entry*/ 
+			if(buf[loc] != 0xE5 /*Is not unused*/
+					&& (buf[loc+0xB] & 0xF) != 0xF /*Is not a long filename entry*/
 					&& (buf[loc+0xB] & 0xA) == 0 /*Is a file or directory and should be shown*/
 					&& buf[loc] != 0 /*Is not empty */){
 				dir_size++;
@@ -94,11 +95,11 @@ void listDir(uint32_t cluster, char *filter){
 						lastChar = i;
 					}
 				}
-				
+
 				xpos = current_col*13;
-				
+
 				shouldPrintln = true;
-				
+
 				if(buf[loc+0xB] & 0x10){ //Is a directory
 					char name[lastChar+2];
 					for(int i = 0; i < lastChar+1; i++){
@@ -174,7 +175,7 @@ void listDir(uint32_t cluster, char *filter){
 						println("");
 				}
 			}else{
-				
+
 			}
 		}
 		sector++;
@@ -291,8 +292,8 @@ fat32file getFile(char *file){ //If file doesn't have any clusters allocated to 
 			if(buf[loc] == 0){ //End of directory
 				done = true;
 				i = 16;
-			}else if(buf[loc] != 0xE5 /*Is not unused*/ 
-					&& (buf[loc+0xB] & 0xF) != 0xF /*Is not a long filename entry*/ 
+			}else if(buf[loc] != 0xE5 /*Is not unused*/
+					&& (buf[loc+0xB] & 0xF) != 0xF /*Is not a long filename entry*/
 					&& (buf[loc+0xB] & 0x8) == 0 /*Is a file or directory*/){
 				uint8_t lastChar = 0;
 				for(int i = 0; i < 8; i++){
@@ -374,7 +375,7 @@ fat32file getFile(char *file){ //If file doesn't have any clusters allocated to 
 					}
 				}
 			}else{
-				
+
 			}
 		}
 		sector++;

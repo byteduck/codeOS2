@@ -3,10 +3,16 @@
 
 //inode constants
 #define ROOT_INODE 2
+#define EXT2_SIGNATURE 0x53EF
 
 //inode types
+#define EXT2_FIFO 0x1000
+#define EXT2_CHAR_DEVICE 0x2000
 #define EXT2_DIRECTORY 0x4000
+#define EXT2_BLOCK_DEVICE 0x6000
 #define EXT2_FILE 0x8000
+#define EXT2_SYMLINK 0xA000
+#define EXT2_SOCKET 0xC000
 
 //inode flags
 #define EXT2_SYNCHRONOUS 0x8
@@ -40,7 +46,7 @@ typedef struct __attribute__((packed)) ext2_superblock{
 	uint32_t os_id;
 	uint32_t version_major;
 	uint16_t reserved_user;
-	uint16_t reserved_group; 
+	uint16_t reserved_group;
 	//Start extended fields
 	uint32_t first_inode;
 	uint16_t inode_size;
@@ -73,7 +79,7 @@ typedef struct __attribute__((packed)) ext2_partition{
 	uint32_t num_block_groups;
 	uint32_t inodes_per_block;
 	ext2_superblock *superblock;
-	
+
 } ext2_partition;
 
 typedef struct __attribute__((packed)) ext2_block_group_descriptor{
@@ -110,6 +116,13 @@ typedef struct __attribute__((packed)) ext2_inode{
 	uint32_t os_specific_2[3];
 } ext2_inode;
 
+typedef struct __attribute__((packed)) ext2_directory{
+	uint32_t inode;
+	uint16_t size;
+	uint8_t name_length;
+	uint8_t type;
+} ext2_directory;
+
 bool isPartitionExt2(int disk, int sect);
 void getExt2Superblock(int disk, int sect, ext2_superblock *sp);
 void setCurrentExt2Partition(int sect, uint8_t disk, ext2_superblock *sb);
@@ -123,5 +136,8 @@ uint8_t *ext2_allocBlock();
 void ext2_freeBlock(uint8_t *block);
 uint32_t ext2_blockToSector(uint32_t block);
 uint8_t *ext2_readBlock(uint32_t block, uint8_t *buf);
+void ext2_listDirectory(uint32_t inode_);
+void ext2_listDirectoryEntries(ext2_directory *dir);
+uint32_t ext2_findFileInDirectory(char *name, uint32_t dir_inode);
 
 #endif
