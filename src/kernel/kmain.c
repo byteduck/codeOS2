@@ -52,7 +52,6 @@ int kmain(uint32_t mbootptr){
 	if(ext2_getCurrentSuperblock()->inode_size != 128){
 		printf("Unsupported inode size %d. codeOS2 only supports an inode size of 128 at this time.", ext2_getCurrentSuperblock()->inode_size);
 	}
-	printf("root inode information: ");
 	shell();
 }
 

@@ -71,6 +71,8 @@ char nibbleToHexString(uint8_t num){
 char *itoa(int i, char *p, int base){
 	char const digit[] = "0123456789";
 	int nbcount = 0;
+	bool flag = 0;
+	int ind;
 	switch(base){
 		case 10:
 			if(i<0){
@@ -88,14 +90,18 @@ char *itoa(int i, char *p, int base){
 				i = i/10;
 			}while(i);
 		break;
+		//I figured out how to roll base 2 and 16 into one thing... Not sure how efficient it is though
+		case 2:
 		case 16:
-			print("[ITOA 16 DOES NOT WORK PROPERLY]");
-			for(uint32_t a = 0xF0000000; a > 0; a = a >> 4)
-				if((i&a) != 0) nbcount++;
-			int ind = nbcount;
-			for(ind > 0; ind--;)
-				p[-ind+nbcount-1] = nibbleToHexString((i >> ((ind)*4)) & 0xF);
-			p[nbcount] = '\0';
+			if(i == 0){p[0] = '0'; p[1] = '\0';}else{
+				uint8_t shift = base == 16 ? 4 : 1;
+				for(uint32_t a = (base == 16 ? 0xF0000000 : 0x80000000); a > 0; a = a >> shift)
+					if((i&a) != 0 || flag){ nbcount++; flag = true;}
+				ind = nbcount;
+				for(ind > 0; ind--;)
+					p[-ind+nbcount-1] = base == 16 ? (nibbleToHexString((i >> (ind*4)) & 0xF)) : (((i >> ind) & 0x1) ? '1' : '0');
+				p[nbcount] = '\0';
+			}
 		break;
 	}
 	return p;

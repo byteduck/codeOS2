@@ -156,6 +156,12 @@ void printf(char *fmt, ...){
 			print(s);
 			break;
 
+		case 'b':
+			i = va_arg(argp, int);
+			s = itoa(i, fmtbuf, 2);
+			print(s);
+			break;
+
 		case '%':
 			putch('%');
 			break;

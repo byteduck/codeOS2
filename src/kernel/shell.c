@@ -82,7 +82,8 @@ static void command_eval(char *cmd, char *args){
 			ext2_inode *inode = kmalloc(sizeof(ext2_inode));
 			ext2_readInode(strToInt(args),inode);
 			printf("inode %d:\n",strToInt(args));
-			printf("inode type: %d\ninode size: %d bytes\n", inode->type, inode->size_lower);
+			printf("inode type: 0x%x\ninode size: 0x%x bytes\n", inode->type, inode->size_lower);
+			printf("inode flags: %b\n", inode->flags);
 		}
 	}/*else if(strcmp(cmd,"cat")){
 		fat32file f = getFile(args);
