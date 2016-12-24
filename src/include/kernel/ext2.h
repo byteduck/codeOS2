@@ -138,6 +138,6 @@ uint32_t ext2_blockToSector(uint32_t block);
 uint8_t *ext2_readBlock(uint32_t block, uint8_t *buf);
 void ext2_listDirectory(uint32_t inode_);
 void ext2_listDirectoryEntries(ext2_directory *dir);
-uint32_t ext2_findFileInDirectory(char *name, uint32_t dir_inode);
+uint32_t ext2_findFile(char *name, uint32_t dir_inode);
 
 #endif

@@ -68,14 +68,16 @@ void ext2_listDirectory(uint32_t inode_){
 	if((inode->type & 0xF000) != EXT2_DIRECTORY){
 		printf("given inode is not a directory!\n");
 	}else{
-		uint8_t *buf = kmalloc(ext2_getBlockSize());
+		uint8_t *buf = ext2_allocBlock();
 		for(int i = 0; i < 12; i++){
 			uint32_t block = inode->block_pointers[i];
 			if(block == 0 || block > ext2_getCurrentSuperblock()->total_blocks) break;
 			ext2_readBlock(block, buf);
 			ext2_listDirectoryEntries((ext2_directory *)buf);
 		}
+		ext2_freeBlock(buf);
 	}
+	kfree(inode, sizeof(inode));
 }
 
 void ext2_listDirectoryEntries(ext2_directory *dir){
@@ -83,34 +85,55 @@ void ext2_listDirectoryEntries(ext2_directory *dir){
 		char *name = kmalloc(dir->name_length + 1);
 		name[dir->name_length] = '\0';
 		memcpy(name, &dir->type+1, dir->name_length);
-		if(name[0] != '.') printf("%s\n",name);
+		if(name[0] != '.' && name[0] != '\0') printf("%s\n", name, dir->inode);
 		kfree(name, dir->name_length + 1);
 		dir = (ext2_directory *)((uint32_t)dir + dir->size);
 	}
 }
 
-uint32_t ext2_findFileInDirectory(char *find_name, uint32_t dir_inode){
+//dir_inode will be set to 2 if find_name starts with '/'
+uint32_t ext2_findFile(char *find_name, uint32_t dir_inode){
+	if(find_name[0] == '/'){
+		find_name++;
+		dir_inode = 2;
+	}
+	uint32_t namelen = strlen(find_name);
+	if(namelen == 0) return dir_inode;
+	uint8_t *buf = ext2_allocBlock();
+	char *cfind_name = kmalloc(namelen);
 	ext2_inode *inode = kmalloc(sizeof(inode));
-	ext2_readInode(dir_inode,inode);
-	uint8_t *buf = kmalloc(ext2_getBlockSize());
-	for(int i = 0; i < 12; i++){
-		uint32_t block = inode->block_pointers[i];
-		if(block == 0 || block > ext2_getCurrentSuperblock()->total_blocks) break;
-		ext2_readBlock(block, buf);
-		ext2_directory *dir = (ext2_directory *)buf;
-		while(dir->inode != 0){
-			char *name = kmalloc(dir->name_length + 1);
-			name[dir->name_length] = '\0';
-			memcpy(name, &dir->type+1, dir->name_length);
-			if(strcmp(name, find_name)){
+	while(*find_name != 0){
+		uint32_t strindex = indexOf('/',find_name);
+		substrr(0,strindex,find_name,cfind_name);
+		find_name+=strindex+(strindex == strlen(find_name) ? 0 : 1);
+		ext2_readInode(dir_inode,inode);
+		bool found = 0;
+		for(int i = 0; i < 12 && !found; i++){
+			uint32_t block = inode->block_pointers[i];
+			if(block == 0 || block > ext2_getCurrentSuperblock()->total_blocks) break;
+			ext2_readBlock(block, buf);
+			ext2_directory *dir = (ext2_directory *)buf;
+			while(dir->inode != 0 && !found){
+				char *name = kmalloc(dir->name_length + 1);
+				name[dir->name_length] = '\0';
+				memcpy(name, &dir->type+1, dir->name_length);
+				if(strcmp(name, cfind_name)){
+					dir_inode = dir->inode;
+					found = 1;
+				}
 				kfree(name, dir->name_length + 1);
-				return dir->inode;
+				dir = (ext2_directory *)((uint32_t)dir + dir->size);
 			}
-			kfree(name, dir->name_length + 1);
-			dir = (ext2_directory *)((uint32_t)dir + dir->size);
+		}
+		if(!found){
+			dir_inode = 0;
+			find_name+= strlen(find_name);
 		}
 	}
-	return 0;
+	kfree(inode, sizeof(inode));
+	kfree(cfind_name, namelen);
+	ext2_freeBlock(buf);
+	return dir_inode;
 }
 
 ext2_superblock *ext2_getCurrentSuperblock(){

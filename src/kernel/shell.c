@@ -45,9 +45,18 @@ static void command_eval(char *cmd, char *args){
 		println("pagefault: Triggers a page fault, in case you wanted to.");
 		println("exit: Pretty self explanatory.");
 	}else if(strcmp(cmd,"ls")){
-		ext2_listDirectory(current_inode);
+		if(strcmp(args,""))
+			ext2_listDirectory(current_inode);
+		else{
+			uint32_t inodeID = ext2_findFile(args, current_inode);
+			if(!inodeID) printf("That directory does not exist.\n"); else{
+				ext2_inode *inode = kmalloc(sizeof(ext2_inode));
+				ext2_readInode(inodeID, inode);
+				if((inode->type & 0xF000) != EXT2_DIRECTORY) printf("%s is not a directory.\n",args); else ext2_listDirectory(inodeID);
+			}
+		}
 	}else if(strcmp(cmd,"cd")){
-		uint32_t inodeID = ext2_findFileInDirectory(args, current_inode);
+		uint32_t inodeID = ext2_findFile(args, current_inode);
 		if(!inodeID) printf("That directory does not exist.\n"); else{
 			ext2_inode *inode = kmalloc(sizeof(ext2_inode));
 			ext2_readInode(inodeID, inode);
