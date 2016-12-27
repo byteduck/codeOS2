@@ -106,9 +106,9 @@ typedef struct __attribute__((packed)) ext2_inode{
 	uint32_t flags;
 	uint32_t os_specific_1;
 	uint32_t block_pointers[12];
-	uint32_t single_indirect_block_pointer;
-	uint32_t double_indirect_block_pointer;
-	uint32_t triple_indirect_block_pointer;
+	uint32_t s_pointer;
+	uint32_t d_pointer;
+	uint32_t t_pointer;
 	uint32_t generation_number;
 	uint32_t extended_attribute_block;
 	uint32_t size_upper;
@@ -125,19 +125,22 @@ typedef struct __attribute__((packed)) ext2_directory{
 
 bool isPartitionExt2(int disk, int sect);
 void getExt2Superblock(int disk, int sect, ext2_superblock *sp);
-void setCurrentExt2Partition(int sect, uint8_t disk, ext2_superblock *sb);
-uint32_t ext2_getBlockSize();
-uint32_t ext2_getBlockGroupOfInode(uint32_t inode);
-uint32_t ext2_getIndexOfInode(uint32_t inode);
-uint32_t ext2_getBlockOfInode(uint32_t inode);
-void ext2_readInode(uint32_t inode, ext2_inode *buf);
-ext2_superblock *ext2_getCurrentSuperblock();
-uint8_t *ext2_allocBlock();
-void ext2_freeBlock(uint8_t *block);
-uint32_t ext2_blockToSector(uint32_t block);
-uint8_t *ext2_readBlock(uint32_t block, uint8_t *buf);
-void ext2_listDirectory(uint32_t inode_);
+void initExt2Partition(int sect, uint8_t disk, ext2_superblock *sb, ext2_partition *part);
+uint32_t ext2_getBlockSize(ext2_partition *part);
+uint32_t ext2_getBlockGroupOfInode(uint32_t inode, ext2_partition *part);
+uint32_t ext2_getIndexOfInode(uint32_t inode, ext2_partition *part);
+uint32_t ext2_getBlockOfInode(uint32_t inode, ext2_partition *part);
+void ext2_readInode(uint32_t inode, ext2_inode *buf, ext2_partition *part);
+ext2_superblock *ext2_getSuperblock(ext2_partition *part);
+uint8_t *ext2_allocBlock(ext2_partition *part);
+void ext2_freeBlock(uint8_t *block, ext2_partition *part);
+uint32_t ext2_blockToSector(uint32_t block, ext2_partition *part);
+uint8_t *ext2_readBlock(uint32_t block, uint8_t *buf, ext2_partition *part);
+void ext2_read_slink(uint32_t block, uint8_t *buf, ext2_partition *part);
+void ext2_read_dlink(uint32_t block, uint8_t *buf, ext2_partition *part);
+void ext2_listDirectory(uint32_t inode_, ext2_partition *part);
 void ext2_listDirectoryEntries(ext2_directory *dir);
-uint32_t ext2_findFile(char *name, uint32_t dir_inode);
+uint8_t ext2_readFile(ext2_inode *inode, uint8_t *buf, ext2_partition *part);
+uint32_t ext2_findFile(char *name, uint32_t dir_inode, ext2_inode *inode, ext2_partition *part);
 
 #endif

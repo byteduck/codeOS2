@@ -1,5 +1,4 @@
 #include <common.h>
-#include <common.h>
 #include <tss.h>
 #include <gdt.h>
 #include <multiboot.h>
@@ -48,11 +47,13 @@ int kmain(uint32_t mbootptr){
 		printf("Unsupported ext2 version %d.%d. Must be at least 1.", sb.version_major, sb.version_minor);
 		while(true);
 	}
-	setCurrentExt2Partition(fp,boot_disk,&sb);
-	if(ext2_getCurrentSuperblock()->inode_size != 128){
-		printf("Unsupported inode size %d. codeOS2 only supports an inode size of 128 at this time.", ext2_getCurrentSuperblock()->inode_size);
+	ext2_partition ext2a = {};
+	ext2_partition *ext2 = &ext2a;
+	initExt2Partition(fp,boot_disk,&sb,ext2);
+	if(ext2_getSuperblock(ext2)->inode_size != 128){
+		printf("Unsupported inode size %d. codeOS2 only supports an inode size of 128 at this time.", ext2_getSuperblock(ext2)->inode_size);
 	}
-	shell();
+	shell(ext2);
 }
 
 void parse_mboot(uint32_t addr){
