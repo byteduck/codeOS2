@@ -15,6 +15,7 @@
 #include <keyboard.h>
 #include <shell.h>
 #include <pit.h>
+#include <tasking.h>
 #include <kmain.h>
 
 int i;
@@ -54,7 +55,8 @@ int kmain(uint32_t mbootptr){
 	if(ext2_getSuperblock(&ext2)->inode_size != 128){
 		printf("Unsupported inode size %d. codeOS2 only supports an inode size of 128 at this time.", ext2_getSuperblock(&ext2)->inode_size);
 	}
-	shell(&fs);
+	initTasking();
+	//shell(&fs);
 }
 
 void parse_mboot(uint32_t addr){
@@ -73,7 +75,8 @@ void interrupts_init(){
 	isr_init();
 	idt_set_gate(0x80, (unsigned)syscall_handler, 0x08, 0x8E);
 	irq_add_handler(1, keyboard_handler);
-	irq_add_handler(0, pit_handler);
+	//irq_add_handler(0, pit_handler);
+	pit_init(200);
 	irq_init();
 	asm volatile("sti");
 }

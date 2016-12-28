@@ -9,7 +9,7 @@ LD = ld
 codeos2: $(CFILES)
 	mv src/kernel/*.o .
 	nasm asm/startup.asm -f elf -o startup.o
-	ld -o out/disk/boot/codek32 *.o -T linker.ld -melf_i386
+	ld -o out/disk/boot/codek32 *.o -T linker.ld -melf_i386 -Map kernel.map
 	rm *.o
 	./copy.sh
 	qemu-system-i386 -drive file=/dev/loop0,cache=directsync,format=raw

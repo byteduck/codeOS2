@@ -1,0 +1,706 @@
+
+Allocating common symbols
+Common symbol       size              file
+
+cmdbuf              0x100             shell.o
+gp                  0x6               gdt.o
+idtp                0x6               idt.o
+fs                  0x4               shell.o
+ata_buf2            0x200             ata.o
+gdt                 0x28              gdt.o
+prog                0x1000            fat32.o
+dirbuf2             0x200             shell.o
+tss_high            0x2               kmain.o
+i                   0x4               kmain.o
+heap_space          0x100000          heap.o
+exec_page_table     0x1000            paging.o
+current             0x4               tasking.o
+frbuf               0xc               heap.o
+tss_low             0x1               kmain.o
+kfreebuf            0x4               heap.o
+argbuf              0x100             shell.o
+idt                 0x800             idt.o
+kernel              0x4               tasking.o
+kbdbuf              0x100             keyboard.o
+dirbuf              0x200             shell.o
+ata_buf             0x200             ata.o
+frsbuf              0x10              heap.o
+page_directory      0x1000            paging.o
+frames              0x2000            heap.o
+input_i             0x1               keyboard.o
+currentfat32part    0x28              fat32.o
+
+Discarded input sections
+
+ .group         0x0000000000000000        0x8 ata.o
+ .group         0x0000000000000000        0x8 ata.o
+ .group         0x0000000000000000        0x8 common.o
+ .text.__x86.get_pc_thunk.ax
+                0x0000000000000000        0x4 common.o
+ .group         0x0000000000000000        0x8 ehci.o
+ .group         0x0000000000000000        0x8 ehci.o
+ .text.__x86.get_pc_thunk.ax
+                0x0000000000000000        0x4 ehci.o
+ .text.__x86.get_pc_thunk.bx
+                0x0000000000000000        0x4 ehci.o
+ .group         0x0000000000000000        0x8 ext2.o
+ .group         0x0000000000000000        0x8 ext2.o
+ .text.__x86.get_pc_thunk.ax
+                0x0000000000000000        0x4 ext2.o
+ .text.__x86.get_pc_thunk.bx
+                0x0000000000000000        0x4 ext2.o
+ .group         0x0000000000000000        0x8 fat32.o
+ .group         0x0000000000000000        0x8 fat32.o
+ .group         0x0000000000000000        0x8 fat32.o
+ .text.__x86.get_pc_thunk.ax
+                0x0000000000000000        0x4 fat32.o
+ .text.__x86.get_pc_thunk.bx
+                0x0000000000000000        0x4 fat32.o
+ .group         0x0000000000000000        0x8 gdt.o
+ .group         0x0000000000000000        0x8 gdt.o
+ .text.__x86.get_pc_thunk.ax
+                0x0000000000000000        0x4 gdt.o
+ .text.__x86.get_pc_thunk.bx
+                0x0000000000000000        0x4 gdt.o
+ .group         0x0000000000000000        0x8 heap.o
+ .group         0x0000000000000000        0x8 heap.o
+ .group         0x0000000000000000        0x8 heap.o
+ .text.__x86.get_pc_thunk.ax
+                0x0000000000000000        0x4 heap.o
+ .text.__x86.get_pc_thunk.bx
+                0x0000000000000000        0x4 heap.o
+ .group         0x0000000000000000        0x8 idt.o
+ .group         0x0000000000000000        0x8 idt.o
+ .text.__x86.get_pc_thunk.ax
+                0x0000000000000000        0x4 idt.o
+ .text.__x86.get_pc_thunk.bx
+                0x0000000000000000        0x4 idt.o
+ .group         0x0000000000000000        0x8 irq.o
+ .group         0x0000000000000000        0x8 irq.o
+ .text.__x86.get_pc_thunk.ax
+                0x0000000000000000        0x4 irq.o
+ .text.__x86.get_pc_thunk.bx
+                0x0000000000000000        0x4 irq.o
+ .group         0x0000000000000000        0x8 isr.o
+ .text.__x86.get_pc_thunk.bx
+                0x0000000000000000        0x4 isr.o
+ .group         0x0000000000000000        0x8 keyboard.o
+ .group         0x0000000000000000        0x8 keyboard.o
+ .text.__x86.get_pc_thunk.ax
+                0x0000000000000000        0x4 keyboard.o
+ .text.__x86.get_pc_thunk.bx
+                0x0000000000000000        0x4 keyboard.o
+ .group         0x0000000000000000        0x8 kmain.o
+ .group         0x0000000000000000        0x8 kmain.o
+ .text.__x86.get_pc_thunk.dx
+                0x0000000000000000        0x4 kmain.o
+ .text.__x86.get_pc_thunk.bx
+                0x0000000000000000        0x4 kmain.o
+ .group         0x0000000000000000        0x8 paging.o
+ .group         0x0000000000000000        0x8 paging.o
+ .text.__x86.get_pc_thunk.ax
+                0x0000000000000000        0x4 paging.o
+ .text.__x86.get_pc_thunk.bx
+                0x0000000000000000        0x4 paging.o
+ .group         0x0000000000000000        0x8 pci.o
+ .group         0x0000000000000000        0x8 pci.o
+ .text.__x86.get_pc_thunk.ax
+                0x0000000000000000        0x4 pci.o
+ .text.__x86.get_pc_thunk.bx
+                0x0000000000000000        0x4 pci.o
+ .group         0x0000000000000000        0x8 pit.o
+ .group         0x0000000000000000        0x8 pit.o
+ .group         0x0000000000000000        0x8 pit.o
+ .text.__x86.get_pc_thunk.ax
+                0x0000000000000000        0x4 pit.o
+ .text.__x86.get_pc_thunk.dx
+                0x0000000000000000        0x4 pit.o
+ .group         0x0000000000000000        0x8 shell.o
+ .text.__x86.get_pc_thunk.bx
+                0x0000000000000000        0x4 shell.o
+ .group         0x0000000000000000        0x8 stdio.o
+ .group         0x0000000000000000        0x8 stdio.o
+ .group         0x0000000000000000        0x8 stdio.o
+ .group         0x0000000000000000        0x8 stdio.o
+ .text.__x86.get_pc_thunk.ax
+                0x0000000000000000        0x4 stdio.o
+ .text.__x86.get_pc_thunk.dx
+                0x0000000000000000        0x4 stdio.o
+ .text.__x86.get_pc_thunk.cx
+                0x0000000000000000        0x4 stdio.o
+ .text.__x86.get_pc_thunk.bx
+                0x0000000000000000        0x4 stdio.o
+ .group         0x0000000000000000        0x8 syscall.o
+ .text.__x86.get_pc_thunk.bx
+                0x0000000000000000        0x4 syscall.o
+ .group         0x0000000000000000        0x8 tasking.o
+ .group         0x0000000000000000        0x8 tasking.o
+ .group         0x0000000000000000        0x8 tasking.o
+ .text.__x86.get_pc_thunk.ax
+                0x0000000000000000        0x4 tasking.o
+ .text.__x86.get_pc_thunk.cx
+                0x0000000000000000        0x4 tasking.o
+ .text.__x86.get_pc_thunk.bx
+                0x0000000000000000        0x4 tasking.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+LOAD ata.o
+LOAD common.o
+LOAD ehci.o
+LOAD elf.o
+LOAD ext2.o
+LOAD fat32.o
+LOAD gdt.o
+LOAD heap.o
+LOAD idt.o
+LOAD irq.o
+LOAD isr.o
+LOAD keyboard.o
+LOAD kmain.o
+LOAD paging.o
+LOAD pci.o
+LOAD pit.o
+LOAD shell.o
+LOAD startup.o
+LOAD stdio.o
+LOAD syscall.o
+LOAD tasking.o
+LOAD tss.o
+LOAD vfs.o
+                0x00000000c0100000                . = 0xc0100000
+                0x00000000c0100000                krnlstart = .
+
+.text           0x00000000c0100000     0x6cb3 load address 0x0000000000100000
+ *(.text)
+ .text          0x00000000c0100000      0x223 ata.o
+                0x00000000c0100000                prepareDisk
+                0x00000000c01000de                readSector
+                0x00000000c010015a                readSectors
+                0x00000000c01001a7                getFirstPartition
+                0x00000000c0100213                getFSType
+ .text          0x00000000c0100223      0x8e3 common.o
+                0x00000000c0100223                outb
+                0x00000000c010024c                outw
+                0x00000000c0100277                outl
+                0x00000000c0100299                inb
+                0x00000000c01002c0                inw
+                0x00000000c01002e9                inl
+                0x00000000c010030f                sgn
+                0x00000000c0100330                abs
+                0x00000000c010035e                memset
+                0x00000000c010039a                memcpy
+                0x00000000c01003de                numToHexString
+                0x00000000c0100430                nibbleToHexString
+                0x00000000c0100468                itoa
+                0x00000000c0100644                isACharacter
+                0x00000000c0100674                strlen
+                0x00000000c01006a6                strcmp
+                0x00000000c0100737                indexOf
+                0x00000000c010078b                indexOfn
+                0x00000000c01007f2                substr
+                0x00000000c010081f                substri
+                0x00000000c0100852                substrr
+                0x00000000c010088f                strcpy
+                0x00000000c01008ce                countOf
+                0x00000000c0100921                contains
+                0x00000000c01009c1                strToInt
+                0x00000000c0100a24                cli
+                0x00000000c0100a35                sti
+                0x00000000c0100a46                toUpper
+                0x00000000c0100a8f                strcat
+ .text          0x00000000c0100b06      0x130 ehci.o
+                0x00000000c0100b06                getFirstEHCIController
+                0x00000000c0100b50                EHCIDebug
+ .text          0x00000000c0100c36        0x0 elf.o
+ .text          0x00000000c0100c36      0xdd7 ext2.o
+                0x00000000c0100c36                isPartitionExt2
+                0x00000000c0100c7a                ext2_probe
+                0x00000000c0100cdc                getExt2Superblock
+                0x00000000c0100d2a                initExt2Partition
+                0x00000000c0100ea7                ext2_getBlockGroupOfInode
+                0x00000000c0100edd                ext2_getIndexOfInode
+                0x00000000c0100f15                ext2_getBlockOfInode
+                0x00000000c0100f6f                ext2_readInode
+                0x00000000c0101074                ext2_listDirectory
+                0x00000000c0101198                ext2_listDirectoryEntries
+                0x00000000c0101291                ext2_findFile
+                0x00000000c0101515                ext2_getFile
+                0x00000000c01015dc                ext2_readFile
+                0x00000000c010176a                ext2_read_slink
+                0x00000000c0101836                ext2_read_dlink
+                0x00000000c010190a                ext2_getSuperblock
+                0x00000000c010191f                ext2_getBlockSize
+                0x00000000c0101934                ext2_readBlock
+                0x00000000c0101981                ext2_allocBlock
+                0x00000000c01019af                ext2_freeBlock
+                0x00000000c01019e1                ext2_blockToSector
+ .text          0x00000000c0101a0d     0x1cfb fat32.o
+                0x00000000c0101a0d                isPartitionFAT32
+                0x00000000c0101a84                getFat32Part
+                0x00000000c0101ce6                listDir
+                0x00000000c01023c5                listCurrentDir
+                0x00000000c01023f0                changeDir
+                0x00000000c01028ad                getFile
+                0x00000000c010309b                isDirectory
+                0x00000000c01030b1                exists
+                0x00000000c01030c9                getClusterChainSize
+                0x00000000c01031d3                getNextCluster
+                0x00000000c010329f                printFileContents
+                0x00000000c01033ef                getCurrentFat32Part
+                0x00000000c0103447                executeFile
+                0x00000000c01035a6                printCurrentDir
+                0x00000000c01035f2                getFATSectorForCluster
+                0x00000000c0103615                getClusterOfEntry
+                0x00000000c0103663                setCurrentFat32part
+                0x00000000c01036b4                clusterToLBA
+                0x00000000c01036e4                clusterToLBAOther
+ .text          0x00000000c0103708      0x152 gdt.o
+                0x00000000c0103708                gdt_set_gate
+                0x00000000c01037a3                load_gdt
+ .text          0x00000000c010385a      0x613 heap.o
+                0x00000000c010385a                init_heap
+                0x00000000c0103891                first_available_frame
+                0x00000000c0103967                first_available_frameset
+                0x00000000c0103aca                fsalloc
+                0x00000000c0103bae                getFrame
+                0x00000000c0103bf1                falloc
+                0x00000000c0103c9c                ffree
+                0x00000000c0103cdb                kmalloc
+                0x00000000c0103d40                kfree
+                0x00000000c0103de9                String
+                0x00000000c0103e34                strfree
+ .text          0x00000000c0103e6d       0xdb idt.o
+                0x00000000c0103e6d                idt_set_gate
+                0x00000000c0103ef6                register_idt
+ .text          0x00000000c0103f48      0x300 irq.o
+                0x00000000c0103f48                irq_add_handler
+                0x00000000c0103f65                irq_remove_handler
+                0x00000000c0103f83                irq_remap
+                0x00000000c0104040                irq_init
+                0x00000000c01041dd                irq_handler
+ .text          0x00000000c0104248      0x45b isr.o
+                0x00000000c0104248                isr_init
+                0x00000000c0104560                fault_handler
+ .text          0x00000000c01046a3      0x240 keyboard.o
+                0x00000000c01046a3                keyboard_handler
+                0x00000000c0104885                getInput
+ .text          0x00000000c01048e3      0x2f9 kmain.o
+                0x00000000c01048e3                kmain
+                0x00000000c0104b23                parse_mboot
+                0x00000000c0104b75                interrupts_init
+ .text          0x00000000c0104bdc      0x230 paging.o
+                0x00000000c0104bdc                setupPaging
+                0x00000000c0104c79                exec
+                0x00000000c0104cff                pageFaultHandler
+ .text          0x00000000c0104e0c      0x640 pci.o
+                0x00000000c0104e0c                PCIReadWord
+                0x00000000c0104ec8                getPCIVendor
+                0x00000000c0104f2e                getPCIDevice
+                0x00000000c0105068                PCIDebug
+                0x00000000c0105201                printPCIClassCode
+ .text          0x00000000c010544c      0x110 pit.o
+                0x00000000c010544c                pit_handler
+                0x00000000c01054d7                pit_init
+ .text          0x00000000c010555c      0x695 shell.o
+                0x00000000c010555c                shell
+ *fill*         0x00000000c0105bf1        0xf 
+ .text          0x00000000c0105c00      0x263 startup.o
+                0x00000000c0105c18                start
+                0x00000000c0105c67                gdt_flush
+                0x00000000c0105c85                syscall_handler
+                0x00000000c0105c8f                idt_load
+                0x00000000c0105c97                isr0
+                0x00000000c0105c9f                isr1
+                0x00000000c0105ca7                isr2
+                0x00000000c0105caf                isr3
+                0x00000000c0105cb7                isr4
+                0x00000000c0105cbf                isr5
+                0x00000000c0105cc7                isr6
+                0x00000000c0105ccf                isr7
+                0x00000000c0105cd7                isr8
+                0x00000000c0105cdf                isr9
+                0x00000000c0105ce7                isr10
+                0x00000000c0105cef                isr11
+                0x00000000c0105cf4                isr12
+                0x00000000c0105cf9                isr13
+                0x00000000c0105cfe                isr14
+                0x00000000c0105d03                isr15
+                0x00000000c0105d08                isr16
+                0x00000000c0105d0d                isr17
+                0x00000000c0105d12                isr18
+                0x00000000c0105d17                isr19
+                0x00000000c0105d1e                isr20
+                0x00000000c0105d25                isr21
+                0x00000000c0105d2c                isr22
+                0x00000000c0105d33                isr23
+                0x00000000c0105d3a                isr24
+                0x00000000c0105d41                isr25
+                0x00000000c0105d48                isr26
+                0x00000000c0105d4f                isr27
+                0x00000000c0105d56                isr28
+                0x00000000c0105d5d                isr29
+                0x00000000c0105d64                isr30
+                0x00000000c0105d6b                isr31
+                0x00000000c0105d9b                irq0
+                0x00000000c0105db5                irq1
+                0x00000000c0105dbc                irq2
+                0x00000000c0105dc3                irq3
+                0x00000000c0105dca                irq4
+                0x00000000c0105dd1                irq5
+                0x00000000c0105dd8                irq6
+                0x00000000c0105ddf                irq7
+                0x00000000c0105de6                irq8
+                0x00000000c0105ded                irq9
+                0x00000000c0105df4                irq10
+                0x00000000c0105dfb                irq11
+                0x00000000c0105e02                irq12
+                0x00000000c0105e09                irq13
+                0x00000000c0105e10                irq14
+                0x00000000c0105e17                irq15
+                0x00000000c0105e47                _iret
+                0x00000000c0105e48                load_page_dir
+ .text          0x00000000c0105e63      0xac1 stdio.o
+                0x00000000c0105e63                putch
+                0x00000000c0105ea4                print_color
+                0x00000000c0105ef8                print
+                0x00000000c0105f24                println_color
+                0x00000000c0105f6c                println
+                0x00000000c0105f98                setColor
+                0x00000000c0105fbb                center_print_base
+                0x00000000c010612a                printHex
+                0x00000000c0106184                printHexw
+                0x00000000c010620a                printHexl
+                0x00000000c01062d2                printNum
+                0x00000000c010630e                printf
+                0x00000000c0106501                backspace
+                0x00000000c0106553                PANIC
+                0x00000000c01065b7                putch_color
+                0x00000000c01066d2                clearScreen
+                0x00000000c0106746                setAllColor
+                0x00000000c01067bf                center_print
+                0x00000000c01067ed                update_cursor
+                0x00000000c010687d                scroll
+ .text          0x00000000c0106924       0x8b syscall.o
+                0x00000000c0106924                syscallHandler
+ .text          0x00000000c01069af      0x304 tasking.o
+                0x00000000c01069af                kthread
+                0x00000000c01069c5                test
+                0x00000000c01069f2                createProcess
+                0x00000000c0106b67                initTasking
+                0x00000000c0106c35                preempt
+ .text          0x00000000c0106cb3        0x0 tss.o
+ .text          0x00000000c0106cb3        0x0 vfs.o
+
+.text.__x86.get_pc_thunk.ax
+                0x00000000c0106cb3        0x4 load address 0x0000000000106cb3
+ .text.__x86.get_pc_thunk.ax
+                0x00000000c0106cb3        0x4 ata.o
+                0x00000000c0106cb3                __x86.get_pc_thunk.ax
+
+.text.__x86.get_pc_thunk.bx
+                0x00000000c0106cb7        0x4 load address 0x0000000000106cb7
+ .text.__x86.get_pc_thunk.bx
+                0x00000000c0106cb7        0x4 ata.o
+                0x00000000c0106cb7                __x86.get_pc_thunk.bx
+
+.plt.got        0x00000000c0106cc0        0x0 load address 0x0000000000106cc0
+ .plt.got       0x00000000c0106cc0        0x0 ata.o
+
+.text.__x86.get_pc_thunk.dx
+                0x00000000c0106cbb        0x4 load address 0x0000000000106cbb
+ .text.__x86.get_pc_thunk.dx
+                0x00000000c0106cbb        0x4 fat32.o
+                0x00000000c0106cbb                __x86.get_pc_thunk.dx
+
+.text.__x86.get_pc_thunk.si
+                0x00000000c0106cbf        0x4 load address 0x0000000000106cbf
+ .text.__x86.get_pc_thunk.si
+                0x00000000c0106cbf        0x4 heap.o
+                0x00000000c0106cbf                __x86.get_pc_thunk.si
+
+.text.__x86.get_pc_thunk.cx
+                0x00000000c0106cc3        0x4 load address 0x0000000000106cc3
+ .text.__x86.get_pc_thunk.cx
+                0x00000000c0106cc3        0x4 pit.o
+                0x00000000c0106cc3                __x86.get_pc_thunk.cx
+
+.eh_frame       0x00000000c0106cc8     0x143c load address 0x0000000000106cc8
+ .eh_frame      0x00000000c0106cc8       0xec ata.o
+ .eh_frame      0x00000000c0106db4      0x3a8 common.o
+                                        0x3d4 (size before relaxing)
+ .eh_frame      0x00000000c010715c       0x48 ehci.o
+                                         0x88 (size before relaxing)
+ .eh_frame      0x00000000c01071a4      0x2fc ext2.o
+                                        0x33c (size before relaxing)
+ .eh_frame      0x00000000c01074a0      0x30c fat32.o
+                                        0x34c (size before relaxing)
+ .eh_frame      0x00000000c01077ac       0x48 gdt.o
+                                         0x88 (size before relaxing)
+ .eh_frame      0x00000000c01077f4      0x1b4 heap.o
+                                        0x1f4 (size before relaxing)
+ .eh_frame      0x00000000c01079a8       0x48 idt.o
+                                         0x88 (size before relaxing)
+ .eh_frame      0x00000000c01079f0       0xac irq.o
+                                         0xec (size before relaxing)
+ .eh_frame      0x00000000c0107a9c       0x50 isr.o
+                                         0x7c (size before relaxing)
+ .eh_frame      0x00000000c0107aec       0x44 keyboard.o
+                                         0x84 (size before relaxing)
+ .eh_frame      0x00000000c0107b30       0x74 kmain.o
+                                         0xb4 (size before relaxing)
+ .eh_frame      0x00000000c0107ba4       0x64 paging.o
+                                         0xa4 (size before relaxing)
+ .eh_frame      0x00000000c0107c08       0xb0 pci.o
+                                         0xf0 (size before relaxing)
+ .eh_frame      0x00000000c0107cb8       0x80 pit.o
+                                         0xc0 (size before relaxing)
+ .eh_frame      0x00000000c0107d38       0x50 shell.o
+                                         0x7c (size before relaxing)
+ .eh_frame      0x00000000c0107d88      0x2b4 stdio.o
+                                        0x31c (size before relaxing)
+ .eh_frame      0x00000000c010803c       0x24 syscall.o
+                                         0x50 (size before relaxing)
+ .eh_frame      0x00000000c0108060       0xa4 tasking.o
+                                         0xf8 (size before relaxing)
+
+.rodata         0x00000000c0108104      0xa95 load address 0x0000000000108104
+ .rodata        0x00000000c0108104       0x7a ehci.o
+ *fill*         0x00000000c010817e        0x2 
+ .rodata        0x00000000c0108180       0x5a ext2.o
+ *fill*         0x00000000c01081da        0x2 
+ .rodata        0x00000000c01081dc       0x6a fat32.o
+ *fill*         0x00000000c0108246        0x2 
+ .rodata        0x00000000c0108248       0x93 heap.o
+ *fill*         0x00000000c01082db        0x1 
+ .rodata        0x00000000c01082dc       0xe3 isr.o
+ *fill*         0x00000000c01083bf        0x1 
+ .rodata        0x00000000c01083c0      0x154 kmain.o
+ .rodata        0x00000000c0108514       0xa4 paging.o
+ .rodata        0x00000000c01085b8      0x230 pci.o
+ .rodata        0x00000000c01087e8      0x2e5 shell.o
+ *fill*         0x00000000c0108acd        0x3 
+ .rodata        0x00000000c0108ad0       0x75 stdio.o
+ .rodata        0x00000000c0108b45       0x10 syscall.o
+ .rodata        0x00000000c0108b55       0x44 tasking.o
+
+.rel.dyn        0x00000000c0108b9c        0x0 load address 0x0000000000108b9c
+ .rel.got       0x00000000c0108b9c        0x0 ata.o
+ .rel.data.rel  0x00000000c0108b9c        0x0 ata.o
+ .rel.text      0x00000000c0108b9c        0x0 ata.o
+
+.data           0x00000000c0109000     0x2058 load address 0x0000000000109000
+ *(.data)
+ .data          0x00000000c0109000        0x0 ata.o
+ .data          0x00000000c0109000        0x0 common.o
+ .data          0x00000000c0109000        0x0 ehci.o
+ .data          0x00000000c0109000        0x0 elf.o
+ .data          0x00000000c0109000        0x0 ext2.o
+ .data          0x00000000c0109000        0x0 fat32.o
+ .data          0x00000000c0109000        0x0 gdt.o
+ .data          0x00000000c0109000        0x0 heap.o
+ .data          0x00000000c0109000        0x0 idt.o
+ .data          0x00000000c0109000        0x0 irq.o
+ .data          0x00000000c0109000        0x0 isr.o
+ .data          0x00000000c0109000      0x100 keyboard.o
+                0x00000000c0109000                kbdus
+ .data          0x00000000c0109100        0x0 kmain.o
+ .data          0x00000000c0109100        0x0 paging.o
+ .data          0x00000000c0109100        0x0 pci.o
+ .data          0x00000000c0109100        0x0 pit.o
+ .data          0x00000000c0109100        0x0 shell.o
+ *fill*         0x00000000c0109100      0xf00 
+ .data          0x00000000c010a000     0x104e startup.o
+                0x00000000c010a000                BootPageDirectory
+ *fill*         0x00000000c010b04e        0x2 
+ .data          0x00000000c010b050        0x8 stdio.o
+                0x00000000c010b050                ccolor
+                0x00000000c010b054                vidmem
+ .data          0x00000000c010b058        0x0 syscall.o
+ .data          0x00000000c010b058        0x0 tasking.o
+ .data          0x00000000c010b058        0x0 tss.o
+ .data          0x00000000c010b058        0x0 vfs.o
+
+.got            0x00000000c010b058        0x0 load address 0x000000000010b058
+ .got           0x00000000c010b058        0x0 ata.o
+
+.got.plt        0x00000000c010b058        0xc load address 0x000000000010b058
+ .got.plt       0x00000000c010b058        0xc ata.o
+                0x00000000c010b058                _GLOBAL_OFFSET_TABLE_
+
+.data.rel.local
+                0x00000000c010b064        0x4 load address 0x000000000010b064
+ .data.rel.local
+                0x00000000c010b064        0x4 fat32.o
+                0x00000000c010b064                fat32sig
+
+.data.rel       0x00000000c010b068        0x8 load address 0x000000000010b068
+ .data.rel      0x00000000c010b068        0x8 fat32.o
+                0x00000000c010b068                buf
+                0x00000000c010b06c                buf2
+
+.bss            0x00000000c010c000   0x10b6ce load address 0x000000000010c000
+ *(COMMON)
+ COMMON         0x00000000c010c000      0x400 ata.o
+                0x00000000c010c000                ata_buf2
+                0x00000000c010c200                ata_buf
+ *fill*         0x00000000c010c400      0xc00 
+ COMMON         0x00000000c010d000     0x1028 fat32.o
+                0x00000000c010d000                prog
+                0x00000000c010e000                currentfat32part
+ *fill*         0x00000000c010e028       0x18 
+ COMMON         0x00000000c010e040       0x48 gdt.o
+                0x00000000c010e040                gp
+                0x00000000c010e060                gdt
+ *fill*         0x00000000c010e088       0x18 
+ COMMON         0x00000000c010e0a0   0x102020 heap.o
+                0x00000000c010e0a0                heap_space
+                0x00000000c020e0a0                frbuf
+                0x00000000c020e0ac                kfreebuf
+                0x00000000c020e0b0                frsbuf
+                0x00000000c020e0c0                frames
+ COMMON         0x00000000c02100c0      0x820 idt.o
+                0x00000000c02100c0                idtp
+                0x00000000c02100e0                idt
+ COMMON         0x00000000c02108e0      0x101 keyboard.o
+                0x00000000c02108e0                kbdbuf
+                0x00000000c02109e0                input_i
+ *fill*         0x00000000c02109e1        0x3 
+ COMMON         0x00000000c02109e4        0x9 kmain.o
+                0x00000000c02109e4                tss_high
+                0x00000000c02109e8                i
+                0x00000000c02109ec                tss_low
+ *fill*         0x00000000c02109ed      0x613 
+ COMMON         0x00000000c0211000     0x2000 paging.o
+                0x00000000c0211000                exec_page_table
+                0x00000000c0212000                page_directory
+ COMMON         0x00000000c0213000      0x620 shell.o
+                0x00000000c0213000                cmdbuf
+                0x00000000c0213100                fs
+                0x00000000c0213120                dirbuf2
+                0x00000000c0213320                argbuf
+                0x00000000c0213420                dirbuf
+ COMMON         0x00000000c0213620        0x8 tasking.o
+                0x00000000c0213620                current
+                0x00000000c0213624                kernel
+ *(.bss)
+ .bss           0x00000000c0213628        0x1 ata.o
+                0x00000000c0213628                boot_disk
+ .bss           0x00000000c0213629        0x0 common.o
+ .bss           0x00000000c0213629        0x0 ehci.o
+ .bss           0x00000000c0213629        0x0 elf.o
+ .bss           0x00000000c0213629        0x0 ext2.o
+ *fill*         0x00000000c0213629        0x3 
+ .bss           0x00000000c021362c        0x4 fat32.o
+                0x00000000c021362c                cdir
+ .bss           0x00000000c0213630        0x0 gdt.o
+ .bss           0x00000000c0213630        0x0 heap.o
+ .bss           0x00000000c0213630        0x0 idt.o
+ *fill*         0x00000000c0213630       0x10 
+ .bss           0x00000000c0213640       0x40 irq.o
+                0x00000000c0213640                irq_routines
+ .bss           0x00000000c0213680        0x0 isr.o
+ .bss           0x00000000c0213680        0x4 keyboard.o
+                0x00000000c0213680                shift
+                0x00000000c0213681                input_mode
+                0x00000000c0213682                input_done
+                0x00000000c0213683                shell_mode
+ .bss           0x00000000c0213684        0x0 kmain.o
+ .bss           0x00000000c0213684        0x0 paging.o
+ .bss           0x00000000c0213684        0x0 pci.o
+ .bss           0x00000000c0213684        0x0 pit.o
+ .bss           0x00000000c0213684       0x24 shell.o
+                0x00000000c0213684                exitShell
+                0x00000000c0213688                currentDir
+                0x00000000c0213698                fileBuf
+ *fill*         0x00000000c02136a8       0x18 
+ .bss           0x00000000c02136c0     0x4000 startup.o
+ .bss           0x00000000c02176c0        0x8 stdio.o
+                0x00000000c02176c0                xpos
+                0x00000000c02176c4                ypos
+ .bss           0x00000000c02176c8        0x0 syscall.o
+ .bss           0x00000000c02176c8        0x6 tasking.o
+                0x00000000c02176c8                cpid
+                0x00000000c02176cc                tasking_enabled
+                0x00000000c02176cd                wait
+ .bss           0x00000000c02176ce        0x0 tss.o
+ .bss           0x00000000c02176ce        0x0 vfs.o
+                0x00000000c02176ce                krnlend = .
+OUTPUT(out/disk/boot/codek32 elf32-i386)
+
+.comment        0x0000000000000000       0x2d
+ .comment       0x0000000000000000       0x2d ata.o
+                                         0x2e (size before relaxing)
+ .comment       0x000000000000002d       0x2e common.o
+ .comment       0x000000000000002d       0x2e ehci.o
+ .comment       0x000000000000002d       0x2e elf.o
+ .comment       0x000000000000002d       0x2e ext2.o
+ .comment       0x000000000000002d       0x2e fat32.o
+ .comment       0x000000000000002d       0x2e gdt.o
+ .comment       0x000000000000002d       0x2e heap.o
+ .comment       0x000000000000002d       0x2e idt.o
+ .comment       0x000000000000002d       0x2e irq.o
+ .comment       0x000000000000002d       0x2e isr.o
+ .comment       0x000000000000002d       0x2e keyboard.o
+ .comment       0x000000000000002d       0x2e kmain.o
+ .comment       0x000000000000002d       0x2e paging.o
+ .comment       0x000000000000002d       0x2e pci.o
+ .comment       0x000000000000002d       0x2e pit.o
+ .comment       0x000000000000002d       0x2e shell.o
+ .comment       0x000000000000002d       0x2e stdio.o
+ .comment       0x000000000000002d       0x2e syscall.o
+ .comment       0x000000000000002d       0x2e tasking.o
+ .comment       0x000000000000002d       0x2e tss.o
+ .comment       0x000000000000002d       0x2e vfs.o
+
+.note.GNU-stack
+                0x0000000000000000        0x0
+ .note.GNU-stack
+                0x0000000000000000        0x0 ata.o
+ .note.GNU-stack
+                0x0000000000000000        0x0 common.o
+ .note.GNU-stack
+                0x0000000000000000        0x0 ehci.o
+ .note.GNU-stack
+                0x0000000000000000        0x0 elf.o
+ .note.GNU-stack
+                0x0000000000000000        0x0 ext2.o
+ .note.GNU-stack
+                0x0000000000000000        0x0 fat32.o
+ .note.GNU-stack
+                0x0000000000000000        0x0 gdt.o
+ .note.GNU-stack
+                0x0000000000000000        0x0 heap.o
+ .note.GNU-stack
+                0x0000000000000000        0x0 idt.o
+ .note.GNU-stack
+                0x0000000000000000        0x0 irq.o
+ .note.GNU-stack
+                0x0000000000000000        0x0 isr.o
+ .note.GNU-stack
+                0x0000000000000000        0x0 keyboard.o
+ .note.GNU-stack
+                0x0000000000000000        0x0 kmain.o
+ .note.GNU-stack
+                0x0000000000000000        0x0 paging.o
+ .note.GNU-stack
+                0x0000000000000000        0x0 pci.o
+ .note.GNU-stack
+                0x0000000000000000        0x0 pit.o
+ .note.GNU-stack
+                0x0000000000000000        0x0 shell.o
+ .note.GNU-stack
+                0x0000000000000000        0x0 stdio.o
+ .note.GNU-stack
+                0x0000000000000000        0x0 syscall.o
+ .note.GNU-stack
+                0x0000000000000000        0x0 tasking.o
+ .note.GNU-stack
+                0x0000000000000000        0x0 tss.o
+ .note.GNU-stack
+                0x0000000000000000        0x0 vfs.o

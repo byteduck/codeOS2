@@ -40,7 +40,7 @@ extern uint32_t krnlstart;
 extern uint32_t krnlend;
 
 struct registers{
-    unsigned int gs, fs, es, dsl;
+    unsigned int gs, fs, es, ds;
     unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax;
     unsigned int num, err_code;
     unsigned int eip, cs, eflags, useresp, ss;

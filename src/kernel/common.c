@@ -2,7 +2,7 @@
 #include <stdio.h>
 
 void outb(uint16_t port, uint8_t value){
-    asm volatile ("outb %1, %0" : : "dN" (port), "a" (value));
+    asm volatile ("outb %1, %0" : : "d" (port), "a" (value));
 }
 
 void outw(uint16_t port, uint16_t value){

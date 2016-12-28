@@ -1,5 +1,7 @@
 global idt_load
 extern idtp
+extern preempt
+extern tasking_enabled
 idt_load:
 	lidt [idtp]
 	ret
@@ -136,7 +138,17 @@ global irq15
 		jmp irq_common
 %endmacro
 
-irq 0
+irq0:
+	push eax
+	mov eax, [tasking_enabled]
+	cmp eax, 0
+	jne preempt
+	pop eax
+	pusha
+	mov eax,0x20
+	out 0x20,eax
+	popa
+	iret
 irq 1
 irq 2
 irq 3
@@ -178,3 +190,7 @@ irq_common:
     popa
     add esp, 8
     iret
+
+global _iret
+_iret:
+	iret

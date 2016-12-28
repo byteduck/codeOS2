@@ -1,6 +1,7 @@
 #include <common.h>
 #include <idt.h>
 #include <irq.h>
+#include <pit.h>
 
 void *irq_routines[16] = {
 	0,0,0,0,0,0,0,0,
@@ -17,15 +18,15 @@ void irq_remove_handler(int irq){
 
 void irq_remap(){
 	outb(0x20, 0x11);
-    outb(0xA0, 0x11);
-    outb(0x21, 0x20);
-    outb(0xA1, 0x28);
-    outb(0x21, 0x04);
-    outb(0xA1, 0x02);
-    outb(0x21, 0x01);
-    outb(0xA1, 0x01);
-    outb(0x21, 0x0);
-    outb(0xA1, 0x0);
+	outb(0xA0, 0x11);
+	outb(0x21, 0x20);
+	outb(0xA1, 0x28);
+	outb(0x21, 0x04);
+    	outb(0xA1, 0x02);
+    	outb(0x21, 0x01);
+    	outb(0xA1, 0x01);
+    	outb(0x21, 0x0);
+    	outb(0xA1, 0x0);
 }
 
 void irq_init(){
@@ -50,15 +51,15 @@ void irq_init(){
 
 void irq_handler(struct registers *r){
 	void (*handler)(struct registers *r);
-	
+
 	handler = irq_routines[r->num - 32];
 	if(handler /*If it is not 0, AKA it is registered*/){
 		handler(r);
 	}
-	
+
 	if(r->num >= 40){
 		outb(0xA0, 0x20); //If it is greater than 40, send an end of interrupt to slave controller
 	}
-	
+
 	outb(0x20, 0x20); //Send EOI to controller
 }

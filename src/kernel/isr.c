@@ -49,15 +49,16 @@ void fault_handler(struct registers *r){
 			break;
 
 			case 13: //GPF
-			PANIC("GENERAL_PROTECTION_FAULT", "Instruction pointer:", false);
-			printHexl(r->err_code);
+			PANIC("GENERAL_PROTECTION_FAULT", "Instruction pointer, error code, and registers:", false);
+			printf("eip: 0x%X err: %d\n", r->eip, r->err_code);
+			printf("cs: 0x%X ds: 0x%X es: 0x%X gs: 0x%X",r->cs,r->ds,r->es,r->gs);
 			while(true);
 			break;
-			
+
 			case 14: //Page fault
 			pageFaultHandler(r);
 			break;
-			
+
 			default:
 			PANIC("Something weird happened.", "Fault and Instruction pointer:", false);
 			printHex(r->num);
