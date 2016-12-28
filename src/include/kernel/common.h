@@ -74,5 +74,6 @@ void cli();
 void sti();
 int strToInt(char *str);
 void toUpper(char *str);
+char *strcat(char *dest, const char *src);
 
 #endif

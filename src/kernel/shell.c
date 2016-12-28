@@ -8,18 +8,20 @@
 char cmdbuf[256];
 char argbuf[256];
 char dirbuf[512];
+char dirbuf2[512];
 bool exitShell = false;
-uint32_t current_inode = 2;
-ext2_inode *inode_buf;
+file_t currentDir = {}, fileBuf = {};
 extern bool shell_mode;
 extern uint8_t kbdbuf[256];
-ext2_partition *ext2;
+filesystem_t *fs;
 
-void shell(ext2_partition *ext2p){
-	ext2 = ext2p;
-	inode_buf = kmalloc(sizeof(ext2_inode));
+void shell(filesystem_t *fsp){
+	fs = fsp;
+	fs->getFile("/",&currentDir,fs);
+	dirbuf[0] = '/';
+	dirbuf[1] = '\0';
 	while(!exitShell){
-		print("codeOS2:/$ ");
+		printf("codeOS2:%s$ ", dirbuf);
 		shell_mode = true;
 		getInput();
 		shell_mode = false;
@@ -48,36 +50,34 @@ static void command_eval(char *cmd, char *args){
 		println("pagefault: Triggers a page fault, in case you wanted to.");
 		println("exit: Pretty self explanatory.");
 	}else if(strcmp(cmd,"ls")){
-		if(strcmp(args,""))
-			ext2_listDirectory(current_inode, ext2);
-		else{
-			uint32_t inodeID = ext2_findFile(args, current_inode, inode_buf, ext2);
+		if(strcmp(args,"")){
+			fs->listDir(&currentDir, fs);
+		}else{
+			/*uint32_t inodeID = ext2_findFile(args, current_inode, inode_buf, ext2);
 			if(!inodeID) printf("That directory does not exist.\n"); else{
 				ext2_inode *inode = kmalloc(sizeof(ext2_inode));
 				ext2_readInode(inodeID, inode, ext2);
 				if((inode->type & 0xF000) != EXT2_DIRECTORY) printf("%s is not a directory.\n",args); else ext2_listDirectory(inodeID, ext2);
-			}
+			}*/
 		}
 	}else if(strcmp(cmd,"cd")){
-		uint32_t inodeID = ext2_findFile(args, current_inode, inode_buf, ext2);
-		if(!inodeID) printf("That directory does not exist.\n"); else{
-			ext2_inode *inode = kmalloc(sizeof(ext2_inode));
-			ext2_readInode(inodeID, inode, ext2);
-			if((inode->type & 0xF000) != EXT2_DIRECTORY) printf("%s is not a directory.\n",args); else current_inode = inodeID;
+		strcpy(dirbuf, dirbuf2);
+		strcat(dirbuf2,args);
+		strcat(dirbuf2,"/");
+		if(!fs->getFile(dirbuf2, &fileBuf, fs)) printf("That directory does not exist.\n"); else{
+			if(!fileBuf.isDirectory) printf("%s is not a directory.\n",args); else{
+				currentDir = fileBuf;
+				strcpy(dirbuf2, dirbuf);
+			}
 		}
 	}else if(strcmp(cmd,"pwd")){
-		/*if(strcmp(args,"-c")){
-			//printHex(currentfat32part.current_dir_clust);
-			println("");
-		}else{
-			printCurrentDir();
-		}*/
+		printf("%s\n",dirbuf);
 	}else if(strcmp(cmd,"about")){
 		println("CodeOS2 v0.0");
-	}else if(strcmp(cmd, "partinfo")){
+	}/*else if(strcmp(cmd, "partinfo")){
 		printf("Disk: %d\nBlock size: %d (%d sectors)\nBlocks per group: %d (%d block groups)\nInodes per group: %d\nSuperblock sector: %d\nInode table size: %d blocks\nName: %s\n",
 		ext2->disk, ext2_getBlockSize(ext2), ext2->sectors_per_block, ext2_getSuperblock(ext2)->blocks_per_group, ext2->num_block_groups, ext2_getSuperblock(ext2)->inodes_per_group, ext2->sector+2, ext2->blocks_per_inode_table, ext2_getSuperblock(ext2)->volume_name);
-	}else if(strcmp(cmd, "inode")){
+	}/*else if(strcmp(cmd, "inode")){
 		if(strcmp(args, ""))
 			printf("Usage: \ninode <inode #> - prints information about an inode.\n");
 		else{
@@ -87,18 +87,19 @@ static void command_eval(char *cmd, char *args){
 			printf("inode type: 0x%x\ninode size: 0x%x bytes\n", inode->type, inode->size_lower);
 			printf("inode flags: %b\n", inode->flags);
 		}
-	}else if(strcmp(cmd,"cat")){
-		if(ext2_findFile(args, current_inode, inode_buf,ext2)){
-			uint8_t *fbuf = kmalloc(inode_buf->sectors_in_use*512);
-			if(ext2_readFile(inode_buf, fbuf, ext2)){
-				for(uint32_t i = 0; i < inode_buf->size_lower; i++)
-					putch(fbuf[i]);
-			}else{
-				printf("Error reading file.");
-			}
-			kfree(fbuf, inode_buf->sectors_in_use*512);
+	}*/else if(strcmp(cmd,"cat")){
+		file_t file = {};
+		strcpy(dirbuf, dirbuf2);
+		strcat(dirbuf2,args);
+		strcat(dirbuf2,"/");
+		if(fs->getFile(dirbuf2, &file, fs)){
+			uint8_t *buf = kmalloc(file.sectors*512);
+			fs->read(&file, buf, fs);
+			for(int i = 0; i < file.size; i++)
+				putch(buf[i]);
+			kfree(buf, file.sectors*512);
 		}else{
-			printf("File %s does not exist.\n", args);
+			printf("Cannot find %s.\n",args);
 		}
 	}else if(strcmp(cmd,"pagefault")){
 		if(strcmp(args,"-r")){

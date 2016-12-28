@@ -47,13 +47,14 @@ int kmain(uint32_t mbootptr){
 		printf("Unsupported ext2 version %d.%d. Must be at least 1.", sb.version_major, sb.version_minor);
 		while(true);
 	}
-	ext2_partition ext2a = {};
-	ext2_partition *ext2 = &ext2a;
-	initExt2Partition(fp,boot_disk,&sb,ext2);
-	if(ext2_getSuperblock(ext2)->inode_size != 128){
-		printf("Unsupported inode size %d. codeOS2 only supports an inode size of 128 at this time.", ext2_getSuperblock(ext2)->inode_size);
+	ext2_partition ext2 = {};
+	filesystem_t fs = {};
+	device_t dev = {boot_disk};
+	initExt2Partition(fp,&dev,&sb,&ext2,&fs);
+	if(ext2_getSuperblock(&ext2)->inode_size != 128){
+		printf("Unsupported inode size %d. codeOS2 only supports an inode size of 128 at this time.", ext2_getSuperblock(&ext2)->inode_size);
 	}
-	shell(ext2);
+	shell(&fs);
 }
 
 void parse_mboot(uint32_t addr){

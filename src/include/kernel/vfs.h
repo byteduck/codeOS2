@@ -1,4 +1,25 @@
+#ifndef VFS_H
+#define VFS_H
+
+typedef struct device_t{
+	uint8_t disk;
+} device_t;
+
+typedef struct file_t{
+	uint32_t size;
+	uint32_t sectors;
+	bool isDirectory;
+	uint32_t fs_id;
+} file_t;
+
 typedef struct filesystem_t{
-	bool (*probe)(uint8_t disk);
-	bool (*exists)(char *fn, uint8_t disk, void *);
-}
+	char *type;
+	bool (*probe)(struct filesystem_t *);
+	bool (*read)(file_t *, char *, struct filesystem_t *); //fn, buf, fsdata;
+	bool (*getFile)(char *, file_t *, struct filesystem_t *);
+	bool (*listDir)(file_t *, struct filesystem_t *);
+	void *fs_data;
+	device_t *device;
+} filesystem_t;
+
+#endif

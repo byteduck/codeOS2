@@ -4,12 +4,21 @@
 #include <ata.h>
 #include <stdio.h>
 #include <ext2.h>
+#include <vfs.h>
 
 extern uint8_t ata_buf[512], ata_buf2[512];
 
 bool isPartitionExt2(int disk, int sect){
 	readSector(disk, sect+2, ata_buf); //Supercluster begins at partition sector + 2
 	return ((ext2_superblock *)ata_buf)->signature != EXT2_SIGNATURE;
+}
+
+bool ext2_probe(filesystem_t *fs){
+	if(strcmp(fs->type,"EXT2")){
+		ext2_partition *part = (ext2_partition *)fs->fs_data;
+		return isPartitionExt2(part->disk, part->sector);
+	}
+	return 0;
 }
 
 void getExt2Superblock(int disk, int sect, ext2_superblock *sp){
@@ -20,9 +29,9 @@ void getExt2Superblock(int disk, int sect, ext2_superblock *sp){
 	}
 }
 
-void initExt2Partition(int sect, uint8_t disk, ext2_superblock *sb, ext2_partition *part){
+void initExt2Partition(int sect, device_t *device, ext2_superblock *sb, ext2_partition *part, filesystem_t *fs){
 	part->sector = sect;
-	part->disk = disk;
+	part->disk = device->disk;
 	part->block_size = 1024 << (sb->block_size);
 	part->block_group_descriptor_table = sb->superblock_block+1;
 	part->blocks_per_inode_table = (sb->inode_size*sb->inodes_per_group)/ext2_getBlockSize(part);
@@ -31,6 +40,13 @@ void initExt2Partition(int sect, uint8_t disk, ext2_superblock *sb, ext2_partiti
 	part->num_block_groups = sb->total_blocks/sb->blocks_per_group + (sb->total_blocks % sb->blocks_per_group != 0);
 	part->inodes_per_block = ext2_getBlockSize(part)/sb->inode_size;
 	part->superblock = sb;
+	fs->type = "EXT2";
+	fs->probe = ext2_probe;
+	fs->read = (bool(*)(file_t *, char *, filesystem_t *))ext2_readFile;
+	fs->fs_data = part;
+	fs->getFile = (bool(*)(char *, file_t *, filesystem_t *))ext2_getFile;
+	fs->listDir = (bool(*)(file_t *, filesystem_t *))ext2_listDirectory;
+	fs->device = device;
 }
 
 uint32_t ext2_getBlockGroupOfInode(uint32_t node, ext2_partition *part){
@@ -61,31 +77,37 @@ void ext2_readInode(uint32_t inode, ext2_inode *buf, ext2_partition *part){
 	ext2_freeBlock(read, part);
 }
 
-void ext2_listDirectory(uint32_t inode_, ext2_partition *part){
+bool ext2_listDirectory(file_t *file, filesystem_t *fs){
+	ext2_partition *part = fs->fs_data;
 	ext2_inode *inode = kmalloc(sizeof(inode));
-	ext2_readInode(inode_,inode,part);
+	ext2_readInode(file->fs_id,inode,part);
 	if((inode->type & 0xF000) != EXT2_DIRECTORY){
-		printf("given inode is not a directory!\n");
+		printf("Given file is not a directory!\n");
+		kfree(inode, sizeof(inode));
+		return 0;
 	}else{
 		uint8_t *buf = ext2_allocBlock(part);
 		for(int i = 0; i < 12; i++){
 			uint32_t block = inode->block_pointers[i];
 			if(block == 0 || block > ext2_getSuperblock(part)->total_blocks) break;
 			ext2_readBlock(block, buf, part);
-			ext2_listDirectoryEntries((ext2_directory *)buf);
+			ext2_listDirectoryEntries((ext2_directory *)buf, part);
 		}
 		ext2_freeBlock(buf, part);
 	}
 	kfree(inode, sizeof(inode));
+	return 1;
 }
 
-void ext2_listDirectoryEntries(ext2_directory *dir){
-	while(dir->inode != 0 && dir->size != 0){
+void ext2_listDirectoryEntries(ext2_directory *dir, ext2_partition *part){
+	uint32_t add = 0;
+	while(dir->inode != 0 && add < ext2_getBlockSize(part)){
 		char *name = kmalloc(dir->name_length + 1);
 		name[dir->name_length] = '\0';
 		memcpy(name, &dir->type+1, dir->name_length);
-		if(name[0] != '.' && name[0] != '\0') printf("%s\n", name, dir->inode);
+		if(name[0] != '.' && name[0] != '\0') printf("%s\n", name);
 		kfree(name, dir->name_length + 1);
+		add+=dir->size;
 		dir = (ext2_directory *)((uint32_t)dir + dir->size);
 	}
 }
@@ -111,7 +133,8 @@ uint32_t ext2_findFile(char *find_name, uint32_t dir_inode, ext2_inode *inode, e
 			if(block == 0 || block > ext2_getSuperblock(part)->total_blocks) break;
 			ext2_readBlock(block, buf, part);
 			ext2_directory *dir = (ext2_directory *)buf;
-			while(dir->inode != 0 && dir->size != 0 && !found){
+			uint32_t add = 0;
+			while(dir->inode != 0 && add < ext2_getBlockSize(part) && !found){
 				char *name = kmalloc(dir->name_length + 1);
 				name[dir->name_length] = '\0';
 				memcpy(name, &dir->type+1, dir->name_length);
@@ -121,6 +144,7 @@ uint32_t ext2_findFile(char *find_name, uint32_t dir_inode, ext2_inode *inode, e
 					found = 1;
 				}
 				kfree(name, dir->name_length + 1);
+				add+=dir->size;
 				dir = (ext2_directory *)((uint32_t)dir + dir->size);
 			}
 		}
@@ -134,8 +158,23 @@ uint32_t ext2_findFile(char *find_name, uint32_t dir_inode, ext2_inode *inode, e
 	return dir_inode;
 }
 
+bool ext2_getFile(char *fn, file_t *file, filesystem_t *fs){
+	ext2_inode *inode = kmalloc(sizeof(ext2_inode));
+	uint32_t id = ext2_findFile(fn, 2, inode, (ext2_partition *)(fs->fs_data));
+	file->size = id ? inode->size_lower : 0;
+	file->sectors = id ? inode->sectors_in_use : 0;
+	file->fs_id = id;
+	file->isDirectory = id ? (inode->type & 0xF000) == EXT2_DIRECTORY : 0;
+	kfree(inode, sizeof(ext2_inode));
+	return id ? true : false; //not casting to uint8_t because if id has zero in lower 8 bits then it will return false
+}
+
 //buf must be a multiple of the blocksize
-bool ext2_readFile(ext2_inode *inode, uint8_t *buf, ext2_partition *part){
+bool ext2_readFile(file_t *file, uint8_t *buf, filesystem_t *fs){
+	if(!file->fs_id) return 0;
+	ext2_partition *part = (ext2_partition *)(fs->fs_data);
+	ext2_inode *inode = kmalloc(sizeof(ext2_inode));
+	ext2_readInode(file->fs_id, inode, part);
 	for(int i = 0; i < 12; i++){
 		uint32_t block = inode->block_pointers[i];
 		if(block == 0 || block > ext2_getSuperblock(part)->total_blocks){break;}
@@ -147,6 +186,7 @@ bool ext2_readFile(ext2_inode *inode, uint8_t *buf, ext2_partition *part){
 		ext2_read_dlink(inode->d_pointer, buf+(ext2_getBlockSize(part)/sizeof(uint32_t))*ext2_getBlockSize(part)+12*ext2_getBlockSize(part), part);
 	if(inode->t_pointer)
 		printf("WARNING! File uses t_pointer. Will not work.\n");
+	kfree(inode, sizeof(ext2_inode));
 	return 1;
 }
 

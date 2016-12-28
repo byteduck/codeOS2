@@ -1,6 +1,8 @@
 #ifndef EXT2_H
 #define EXT2_H
 
+#include <vfs.h>
+
 //inode constants
 #define ROOT_INODE 2
 #define EXT2_SIGNATURE 0x53EF
@@ -79,7 +81,7 @@ typedef struct __attribute__((packed)) ext2_partition{
 	uint32_t num_block_groups;
 	uint32_t inodes_per_block;
 	ext2_superblock *superblock;
-
+	filesystem_t *filesystem;
 } ext2_partition;
 
 typedef struct __attribute__((packed)) ext2_block_group_descriptor{
@@ -124,8 +126,9 @@ typedef struct __attribute__((packed)) ext2_directory{
 } ext2_directory;
 
 bool isPartitionExt2(int disk, int sect);
+bool ext2_probe(filesystem_t *fs);
 void getExt2Superblock(int disk, int sect, ext2_superblock *sp);
-void initExt2Partition(int sect, uint8_t disk, ext2_superblock *sb, ext2_partition *part);
+void initExt2Partition(int sect, device_t *device, ext2_superblock *sb, ext2_partition *part, filesystem_t *fs);
 uint32_t ext2_getBlockSize(ext2_partition *part);
 uint32_t ext2_getBlockGroupOfInode(uint32_t inode, ext2_partition *part);
 uint32_t ext2_getIndexOfInode(uint32_t inode, ext2_partition *part);
@@ -134,13 +137,14 @@ void ext2_readInode(uint32_t inode, ext2_inode *buf, ext2_partition *part);
 ext2_superblock *ext2_getSuperblock(ext2_partition *part);
 uint8_t *ext2_allocBlock(ext2_partition *part);
 void ext2_freeBlock(uint8_t *block, ext2_partition *part);
+bool ext2_getFile(char *fn, file_t *file, filesystem_t *fs);
 uint32_t ext2_blockToSector(uint32_t block, ext2_partition *part);
 uint8_t *ext2_readBlock(uint32_t block, uint8_t *buf, ext2_partition *part);
 void ext2_read_slink(uint32_t block, uint8_t *buf, ext2_partition *part);
 void ext2_read_dlink(uint32_t block, uint8_t *buf, ext2_partition *part);
-void ext2_listDirectory(uint32_t inode_, ext2_partition *part);
-void ext2_listDirectoryEntries(ext2_directory *dir);
-uint8_t ext2_readFile(ext2_inode *inode, uint8_t *buf, ext2_partition *part);
+bool ext2_listDirectory(file_t *file, filesystem_t *fs);
+void ext2_listDirectoryEntries(ext2_directory *dir, ext2_partition *part);
+uint8_t ext2_readFile(file_t *file, uint8_t *buf, filesystem_t *fs);
 uint32_t ext2_findFile(char *name, uint32_t dir_inode, ext2_inode *inode, ext2_partition *part);
 
 #endif
