@@ -2,22 +2,27 @@
 #include <heap.h>
 #include <common.h>
 #include <stdio.h>
+#include <pit.h>
 
 //big thanks to levOS (levex on GitHub) for some bits of the tasking code
 
 process_t *current;
 process_t *kernel;
 uint32_t cpid = 0;
+bool wait = false;
 bool tasking_enabled = false;
 
 void kthread(){
 	tasking_enabled = true;
-	while(1);
+	wef:
+	putch('d');
+	goto wef;
 }
 
 void test(){
 	teee:
-	printf("eeeeeee\n");
+	wait = true;
+	putch('e');
 	goto teee;
 }
 
@@ -54,14 +59,7 @@ process_t *createProcess(char *name, uint32_t loc){
 	return p;
 }
 
-void initTasking(){
-	kernel = createProcess("codek32", (uint32_t)kthread);
-	kernel->next = createProcess("test", (uint32_t)test);
-	kernel->next->next = kernel;
-	kernel->prev = kernel;
-	current = kernel;
-
-	//pop all of the registers off of the stack and get started
+void __init__(){
 	asm volatile("mov %%eax, %%esp": :"a"(current->esp));
 	asm volatile("pop %gs");
 	asm volatile("pop %fs");
@@ -75,8 +73,21 @@ void initTasking(){
 	asm volatile("pop %ebx");
 	asm volatile("pop %eax");
 	asm volatile("iret");
+}
+
+void initTasking(){
+	kernel = createProcess("codek32", (uint32_t)kthread);
+	kernel->next = createProcess("test", (uint32_t)test);
+	kernel->next->next = kernel;
+	kernel->prev = kernel;
+	current = kernel;
+
+	__init__();
+	//pop all of the registers off of the stack and get started
 	PANIC("Failed to init tasking", "Something went wrong..", true);
 }
+
+uint32_t popval;
 
 void preempt(){
 	//push current process' registers on to its stack
@@ -108,5 +119,6 @@ void preempt(){
 	asm volatile("pop %ecx");
 	asm volatile("pop %ebx");
 	asm volatile("pop %eax");
+	//while(wait);
 	asm volatile("iret");
 }
