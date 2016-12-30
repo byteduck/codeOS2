@@ -11,19 +11,12 @@ process_t *kernel;
 uint32_t cpid = 0;
 bool wait = false;
 bool tasking_enabled = false;
+uint32_t stck;
 
 void kthread(){
 	tasking_enabled = true;
-	wef:
-	putch('d');
-	goto wef;
-}
-
-void test(){
-	teee:
-	wait = true;
-	putch('e');
-	goto teee;
+	kmain_late();
+	while(1);
 }
 
 process_t *createProcess(char *name, uint32_t loc){
@@ -35,6 +28,7 @@ process_t *createProcess(char *name, uint32_t loc){
 	p->state = PROCESS_ALIVE;
      p->eip = loc;
      p->esp = (uint32_t) kmalloc(4096);
+	p->notExecuted = true;
      asm volatile("mov %%cr3, %%eax":"=a"(p->cr3));
 	uint32_t *stack = (uint32_t *)(p->esp + 4096);
 	p->stack = p->esp;
@@ -60,6 +54,7 @@ process_t *createProcess(char *name, uint32_t loc){
 }
 
 void __init__(){
+	current->notExecuted = false;
 	asm volatile("mov %%eax, %%esp": :"a"(current->esp));
 	asm volatile("pop %gs");
 	asm volatile("pop %fs");
@@ -77,18 +72,15 @@ void __init__(){
 
 void initTasking(){
 	kernel = createProcess("codek32", (uint32_t)kthread);
-	kernel->next = createProcess("test", (uint32_t)test);
-	kernel->next->next = kernel;
+	kernel->next = kernel;
 	kernel->prev = kernel;
 	current = kernel;
-
 	__init__();
 	//pop all of the registers off of the stack and get started
 	PANIC("Failed to init tasking", "Something went wrong..", true);
 }
 
-uint32_t popval;
-
+uint32_t eax;
 void preempt(){
 	//push current process' registers on to its stack
 	asm volatile("push %eax");
@@ -104,6 +96,10 @@ void preempt(){
 	asm volatile("push %gs");
 	asm volatile("mov %%esp, %%eax":"=a"(current->esp));
 	current = current->next;
+	if(current->notExecuted){
+		__init__();
+		return;
+	}
 	//pop all of next process' registers off of its stack
 	asm volatile("mov %%eax, %%cr3": :"a"(current->cr3));
 	asm volatile("mov %%eax, %%esp": :"a"(current->esp));
@@ -114,11 +110,12 @@ void preempt(){
 	asm volatile("pop %ebp");
 	asm volatile("pop %edi");
 	asm volatile("pop %esi");
-	asm volatile("out %%al, %%dx": :"d"(0x20), "a"(0x20));
+	//asm volatile("out %%al, %%dx": :"d"(0x20), "a"(0x20));
 	asm volatile("pop %edx");
 	asm volatile("pop %ecx");
 	asm volatile("pop %ebx");
 	asm volatile("pop %eax");
+	//asm volatile("add $0x0C, %esp");
 	//while(wait);
-	asm volatile("iret");
+	//asm volatile("iret");
 }

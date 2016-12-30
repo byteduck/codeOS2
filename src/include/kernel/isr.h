@@ -38,4 +38,6 @@ void isr_init();
 
 void fault_handler(struct registers *r);
 
+void print_regs(struct registers *r);
+
 #endif

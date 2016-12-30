@@ -15,6 +15,7 @@ typedef struct process_t{
 	uint32_t eip;
 	uint32_t cr3;
 	uint32_t state;
+	bool notExecuted;
 	struct process_t *next, *prev;
 } process_t;
 

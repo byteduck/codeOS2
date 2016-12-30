@@ -140,14 +140,14 @@ global irq15
 
 irq0:
 	push eax
-	mov eax, [tasking_enabled]
-	cmp eax, 0
-	jne preempt
+	mov eax, 0x20
+	out 0x20, al ; bytes only plz
 	pop eax
-	pusha
-	mov eax,0x20
-	out 0x20,eax
-	popa
+	cmp byte [tasking_enabled], 0
+	jne preempt_do
+	iret
+preempt_do:
+	call preempt
 	iret
 irq 1
 irq 2

@@ -39,7 +39,7 @@ typedef unsigned int uint;
 extern uint32_t krnlstart;
 extern uint32_t krnlend;
 
-struct registers{
+struct  __attribute__((packed)) registers{
     unsigned int gs, fs, es, ds;
     unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax;
     unsigned int num, err_code;

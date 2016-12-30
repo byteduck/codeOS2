@@ -5,3 +5,4 @@ void interrupts_init();
 void parse_mboot(uint32_t addr);
 
 int kmain(uint32_t mbootptr);
+void kmain_late();

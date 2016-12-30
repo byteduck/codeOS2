@@ -50,8 +50,7 @@ void fault_handler(struct registers *r){
 
 			case 13: //GPF
 			PANIC("GENERAL_PROTECTION_FAULT", "Instruction pointer, error code, and registers:", false);
-			printf("eip: 0x%X err: %d\n", r->eip, r->err_code);
-			printf("cs: 0x%X ds: 0x%X es: 0x%X gs: 0x%X",r->cs,r->ds,r->es,r->gs);
+			print_regs(r);
 			while(true);
 			break;
 
@@ -68,4 +67,13 @@ void fault_handler(struct registers *r){
 			break;
 		}
 	}
+}
+
+void print_regs(struct registers *r){
+	asm volatile("mov %%ss, %%eax":"=a"(r->ss));
+	printf("eip:0x%X err:%d\n", r->eip, r->err_code);
+	printf("cs:0x%X ds:0x%X es:0x%X gs:0x%X fs:0x%X ss:0x%X\n",r->cs,r->ds,r->es,r->gs,r->fs,r->ss);
+	printf("e?x: a:0x%X b:0x%X c:0x%X d:0x%X\n",r->eax,r->ebx,r->ecx,r->edx);
+	printf("edi: 0x%X esi: 0x%X ebp: 0x%X\n",r->edi,r->esi,r->ebp);
+	printf("EFLAGS: 0x%X",r->eflags);
 }

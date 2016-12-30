@@ -19,6 +19,7 @@
 #include <kmain.h>
 
 int i;
+filesystem_t fs = {};
 
 int kmain(uint32_t mbootptr){
 	load_gdt();
@@ -49,7 +50,6 @@ int kmain(uint32_t mbootptr){
 		while(true);
 	}
 	ext2_partition ext2 = {};
-	filesystem_t fs = {};
 	device_t dev = {boot_disk};
 	initExt2Partition(fp,&dev,&sb,&ext2,&fs);
 	if(ext2_getSuperblock(&ext2)->inode_size != 128){
@@ -57,6 +57,11 @@ int kmain(uint32_t mbootptr){
 	}
 	initTasking();
 	//shell(&fs);
+}
+
+//called from kthread
+void kmain_late(){
+	shell(&fs);
 }
 
 void parse_mboot(uint32_t addr){

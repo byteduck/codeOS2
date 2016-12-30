@@ -12,7 +12,7 @@ codeos2: $(CFILES)
 	ld -o out/disk/boot/codek32 *.o -T linker.ld -melf_i386 -Map kernel.map
 	rm *.o
 	./copy.sh
-	qemu-system-i386 -drive file=/dev/loop0,cache=directsync,format=raw
+	qemu-system-x86_64 -drive file=/dev/loop0,cache=directsync,format=raw
 
 %.o: %.c
 	$(CC) $(FLAGS) $(INC) $(CFLAGS) -c -o $@ $<

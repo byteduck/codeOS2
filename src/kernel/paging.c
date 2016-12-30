@@ -1,6 +1,7 @@
 #include <common.h>
 #include <stdio.h>
 #include <paging.h>
+#include <isr.h>
 
 uint32_t page_directory[1024] __attribute__((aligned(4096)));
 uint32_t exec_page_table[1024] __attribute__((aligned(4096)));
@@ -35,7 +36,7 @@ void exec(uint8_t *prog){
 void pageFaultHandler(struct registers *r){
 	cli();
 	//uint32_t err_pos;
-	//asm("movd %0, %%cr2" : "=r" (err_pos));
+	//asm("mov %0, %%cr2" : "=r" (err_pos));
 	bool other = false;
 	switch(r->err_code){
 		case 0:
@@ -59,13 +60,8 @@ void pageFaultHandler(struct registers *r){
 			other = true;
 			break;
 	}
-	
-	//printHexl(err_pos);
-	//println("");
-	if(other){
-		print("Error Code: ");
-		printHex(r->err_code);
-		println("");
-	}
+
+	//printf("At 0x%X\n\n",err_pos);
+	print_regs(r);
 	while(true);
 }
