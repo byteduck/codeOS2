@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <idt.h>
 #include <isr.h>
+#include <tasking.h>
 
 void isr_init(){
 	idt_set_gate(0, (unsigned)isr0, 0x08, 0x8E);
@@ -39,31 +40,48 @@ void isr_init(){
 	idt_set_gate(31, (unsigned)isr31, 0x08, 0x8E);
 }
 
+bool fpanic(char *a, char *b, uint32_t sig){
+	if(getCurrentProcess()->pid == 1){
+		cli();
+		PANIC(a,b,false);
+		return true;
+	}else{
+		notify(sig);
+		return false;
+	}
+}
+
 void fault_handler(struct registers *r){
 	if(r->num < 32){
 		switch(r->num){
 			case 0:
-			PANIC("DIVIDE_BY_ZERO", "Instruction pointer:", false);
-			printHexl(r->err_code);
-			while(true);
+			if(fpanic("DIVIDE_BY_ZERO", "Instruction pointer:", SIGILL)){
+				printHexl(r->err_code);
+				while(true);
+			}
 			break;
 
 			case 13: //GPF
-			PANIC("GENERAL_PROTECTION_FAULT", "Instruction pointer, error code, and registers:", false);
-			print_regs(r);
-			while(true);
+			if(fpanic("GENERAL_PROTECTION_FAULT", "Instruction pointer, error code, and registers:", SIGILL)){
+				print_regs(r);
+				while(true);
+			}
 			break;
 
 			case 14: //Page fault
-			pageFaultHandler(r);
+			if(getCurrentProcess()->pid == 1)
+				pageFaultHandler(r);
+			else
+				notify(SIGILL);
 			break;
 
 			default:
-			PANIC("Something weird happened.", "Fault and Instruction pointer:", false);
-			printHex(r->num);
-			print(" and ");
-			printHexl(r->err_code);
-			while(true);
+			if(fpanic("Something weird happened.", "Fault and Instruction pointer:", SIGILL)){
+				printHex(r->num);
+				print(" and ");
+				printHexl(r->err_code);
+				while(true);
+			}
 			break;
 		}
 	}

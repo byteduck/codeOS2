@@ -4,6 +4,7 @@
 #include <shell.h>
 #include <ext2.h>
 #include <heap.h>
+#include <tasking.h>
 
 char cmdbuf[256];
 char argbuf[256];
@@ -14,12 +15,16 @@ file_t currentDir = {}, fileBuf = {};
 extern bool shell_mode;
 extern uint8_t kbdbuf[256];
 filesystem_t *fs;
+extern bool tasking_enabled;
 
-void shell(filesystem_t *fsp){
+void initShell(filesystem_t *fsp){
 	fs = fsp;
 	fs->getFile("/",&currentDir,fs);
 	dirbuf[0] = '/';
 	dirbuf[1] = '\0';
+}
+
+void shell(){
 	while(!exitShell){
 		printf("codeOS2:%s$ ", dirbuf);
 		shell_mode = true;
@@ -46,8 +51,9 @@ static void command_eval(char *cmd, char *args){
 		println("help: Shows this message.");
 		println("cat: Prints a file's contents.");
 		println("about: Prints some information.");
-		println("partinfo: Prints information about the current partition.");
+		//println("partinfo: Prints information about the current partition.");
 		println("pagefault: Triggers a page fault, in case you wanted to.");
+		println("tasks: Prints all running tasks.");
 		println("exit: Pretty self explanatory.");
 	}else if(strcmp(cmd,"ls")){
 		if(strcmp(args,"")){
@@ -113,6 +119,8 @@ static void command_eval(char *cmd, char *args){
 		}
 	}else if(strcmp(cmd,"exit")){
 		exitShell = true;
+	}else if(strcmp(cmd,"tasks")){
+		printTasks();
 	}else{
 		/*fat32file f = getFile(cmd);
 		if(exists(f) && !isDirectory(f))

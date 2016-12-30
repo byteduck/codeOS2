@@ -3,15 +3,15 @@
 #include <common.h>
 #include <stdio.h>
 #include <pit.h>
+#include <kmain.h>
 
 //big thanks to levOS (levex on GitHub) for some bits of the tasking code
+//Also, big thanks to /r/osdev and specifically /u/DSMan195276 and /u/NasenSpray for help getting it to work!
 
-process_t *current;
-process_t *kernel;
-uint32_t cpid = 0;
-bool wait = false;
+process_t *current_proc;
+process_t *kernel_proc;
+uint32_t __cpid__ = 0;
 bool tasking_enabled = false;
-uint32_t stck;
 
 void kthread(){
 	tasking_enabled = true;
@@ -24,8 +24,9 @@ process_t *createProcess(char *name, uint32_t loc){
 	memset(p,0,sizeof(process_t)); //make sure everything's clean
 
 	p->name = name;
-	p->pid = ++cpid;
+	p->pid = ++__cpid__;
 	p->state = PROCESS_ALIVE;
+	p->notify = __notify__;
      p->eip = loc;
      p->esp = (uint32_t) kmalloc(4096);
 	p->notExecuted = true;
@@ -53,9 +54,18 @@ process_t *createProcess(char *name, uint32_t loc){
 	return p;
 }
 
+void printTasks(){
+	process_t *current = kernel_proc;
+	printf("Running processes: (PID, name, state, * = is current)\n");
+	do{
+		printf("%c[%d] '%s' %d\n", current == current_proc ? '*' : ' ', current->pid, current->name, current->state);
+		current = current->next;
+	}while(current != kernel_proc);
+}
+
 void __init__(){
-	current->notExecuted = false;
-	asm volatile("mov %%eax, %%esp": :"a"(current->esp));
+	current_proc->notExecuted = false;
+	asm volatile("mov %%eax, %%esp": :"a"(current_proc->esp));
 	asm volatile("pop %gs");
 	asm volatile("pop %fs");
 	asm volatile("pop %es");
@@ -70,19 +80,67 @@ void __init__(){
 	asm volatile("iret");
 }
 
+void preempt_now(){
+	if(!tasking_enabled) return;
+	asm volatile("int $0x81");
+}
+
+void __kill__(){
+	if(current_proc->pid != 1){
+		tasking_enabled = false;
+		kfree((uint8_t *)current_proc->stack,4096);
+		kfree(current_proc, sizeof(process_t));
+		current_proc->prev->next = current_proc->next;
+		current_proc->next->prev = current_proc->prev;
+		current_proc->state = PROCESS_DEAD;
+		tasking_enabled = true;
+		preempt_now();
+	}else{
+		PANIC("KERNEL KILLED","EVERYONE PANIC THIS ISN'T GOOD",true);
+	}
+}
+
+void __notify__(uint32_t sig){
+	switch(sig){
+		case SIGTERM:
+			__kill__();
+		break;
+		case SIGILL:
+			printf("\n(PID %d) Illegal operation! Aborting.\n",current_proc->pid);
+			__kill__();
+	}
+}
+
 void initTasking(){
-	kernel = createProcess("codek32", (uint32_t)kthread);
-	kernel->next = kernel;
-	kernel->prev = kernel;
-	current = kernel;
+	kernel_proc = createProcess("codek32", (uint32_t)kthread);
+	kernel_proc->next = kernel_proc;
+	kernel_proc->prev = kernel_proc;
+	current_proc = kernel_proc;
 	__init__();
 	//pop all of the registers off of the stack and get started
 	PANIC("Failed to init tasking", "Something went wrong..", true);
 }
 
-uint32_t eax;
+process_t *getCurrentProcess(){
+	return current_proc;
+}
+
+void addProcess(process_t *p){
+	bool en = tasking_enabled;
+	tasking_enabled = false;
+	p->next = current_proc->next;
+	p->next->prev = p;
+	p->prev = current_proc;
+	current_proc->next = p;
+	tasking_enabled = en;
+}
+
+void notify(uint32_t sig){
+	current_proc->notify(sig);
+}
+
 void preempt(){
-	//push current process' registers on to its stack
+	//push current_proc process' registers on to its stack
 	asm volatile("push %eax");
 	asm volatile("push %ebx");
 	asm volatile("push %ecx");
@@ -94,15 +152,15 @@ void preempt(){
 	asm volatile("push %es");
 	asm volatile("push %fs");
 	asm volatile("push %gs");
-	asm volatile("mov %%esp, %%eax":"=a"(current->esp));
-	current = current->next;
-	if(current->notExecuted){
+	asm volatile("mov %%esp, %%eax":"=a"(current_proc->esp));
+	current_proc = current_proc->next;
+	if(current_proc->notExecuted){
 		__init__();
 		return;
 	}
 	//pop all of next process' registers off of its stack
-	asm volatile("mov %%eax, %%cr3": :"a"(current->cr3));
-	asm volatile("mov %%eax, %%esp": :"a"(current->esp));
+	asm volatile("mov %%eax, %%cr3": :"a"(current_proc->cr3));
+	asm volatile("mov %%eax, %%esp": :"a"(current_proc->esp));
 	asm volatile("pop %gs");
 	asm volatile("pop %fs");
 	asm volatile("pop %es");

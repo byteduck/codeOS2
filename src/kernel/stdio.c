@@ -192,6 +192,7 @@ void PANIC(char *error, char *msg, bool hang){
 	println("Good job, you crashed it.\nAnyway, here's the details, since you probably need them.\nDon't mess it up again.\n");
 	println(error);
 	println(msg);
+	if(hang) cli();
 	while(hang);
 }
 

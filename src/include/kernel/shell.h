@@ -2,7 +2,8 @@
 #define SHELL_H
 #include <ext2.h>
 
-void shell(filesystem_t *fs);
+void initShell(filesystem_t *fsp);
+void shell();
 static void command_eval(char *cmd, char *args);
 
 #endif

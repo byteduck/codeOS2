@@ -61,7 +61,11 @@ int kmain(uint32_t mbootptr){
 
 //called from kthread
 void kmain_late(){
-	shell(&fs);
+	initShell(&fs);
+	addProcess(createProcess("shell",(uint32_t)shell));
+	while(1);
+	PANIC("Kernel process stopped!","That should not happen.",true);
+	__kill__();
 }
 
 void parse_mboot(uint32_t addr){
@@ -79,6 +83,7 @@ void interrupts_init(){
 	register_idt();
 	isr_init();
 	idt_set_gate(0x80, (unsigned)syscall_handler, 0x08, 0x8E);
+	idt_set_gate(0x81, (unsigned)preempt, 0x08, 0x8E); //for preempting without PIT
 	irq_add_handler(1, keyboard_handler);
 	//irq_add_handler(0, pit_handler);
 	pit_init(200);
