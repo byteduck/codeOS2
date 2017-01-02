@@ -1,5 +1,6 @@
 #include <common.h>
 #include <stdio.h>
+#include <tasking.h>
 #include <syscall.h>
 
 void syscallHandler(uint32_t eax, uint32_t ebx){
@@ -11,6 +12,9 @@ void syscallHandler(uint32_t eax, uint32_t ebx){
 		case 1:
 			;char* c2 = (char*)ebx;
 			print(c2);
+			break;
+		case 2:
+			__kill__();
 			break;
 		default:
 			print("Other syscall ");

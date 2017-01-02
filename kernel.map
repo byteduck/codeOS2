@@ -62,7 +62,7 @@ LOAD vfs.o
                 0x00000000c0100000                . = 0xc0100000
                 0x00000000c0100000                krnlstart = .
 
-.text           0x00000000c0100000     0x685f load address 0x0000000000100000
+.text           0x00000000c0100000     0x686c load address 0x0000000000100000
  *(.text)
  .text          0x00000000c0100000      0x1e2 ata.o
                 0x00000000c0100000                prepareDisk
@@ -279,92 +279,92 @@ LOAD vfs.o
                 0x00000000c01061a0                center_print
                 0x00000000c01061c4                update_cursor
                 0x00000000c0106243                scroll
- .text          0x00000000c01062d8       0x78 syscall.o
+ .text          0x00000000c01062d8       0x85 syscall.o
                 0x00000000c01062d8                syscallHandler
- .text          0x00000000c0106350      0x50f tasking.o
-                0x00000000c0106350                kthread
-                0x00000000c0106364                createProcess
-                0x00000000c01064d9                getProcess
-                0x00000000c0106511                printTasks
-                0x00000000c0106585                __init__
-                0x00000000c01065ac                preempt_now
-                0x00000000c01065c1                __kill__
-                0x00000000c0106663                __notify__
-                0x00000000c01066a1                initTasking
-                0x00000000c0106707                getCurrentProcess
-                0x00000000c0106711                addProcess
-                0x00000000c010676a                notify
-                0x00000000c0106786                kill
-                0x00000000c01067ff                preempt
- .text          0x00000000c010685f        0x0 tss.o
- .text          0x00000000c010685f        0x0 vfs.o
+ .text          0x00000000c010635d      0x50f tasking.o
+                0x00000000c010635d                kthread
+                0x00000000c0106371                createProcess
+                0x00000000c01064e6                getProcess
+                0x00000000c010651e                printTasks
+                0x00000000c0106592                __init__
+                0x00000000c01065b9                preempt_now
+                0x00000000c01065ce                __kill__
+                0x00000000c0106670                __notify__
+                0x00000000c01066ae                initTasking
+                0x00000000c0106714                getCurrentProcess
+                0x00000000c010671e                addProcess
+                0x00000000c0106777                notify
+                0x00000000c0106793                kill
+                0x00000000c010680c                preempt
+ .text          0x00000000c010686c        0x0 tss.o
+ .text          0x00000000c010686c        0x0 vfs.o
 
-.iplt           0x00000000c0106860        0x0 load address 0x0000000000106860
- .iplt          0x00000000c0106860        0x0 ata.o
+.iplt           0x00000000c0106870        0x0 load address 0x0000000000106870
+ .iplt          0x00000000c0106870        0x0 ata.o
 
-.eh_frame       0x00000000c0106860     0x1488 load address 0x0000000000106860
- .eh_frame      0x00000000c0106860       0xb8 ata.o
- .eh_frame      0x00000000c0106918      0x3a8 common.o
+.eh_frame       0x00000000c010686c     0x1488 load address 0x000000000010686c
+ .eh_frame      0x00000000c010686c       0xb8 ata.o
+ .eh_frame      0x00000000c0106924      0x3a8 common.o
                                         0x3c0 (size before relaxing)
- .eh_frame      0x00000000c0106cc0       0x40 ehci.o
+ .eh_frame      0x00000000c0106ccc       0x40 ehci.o
                                          0x58 (size before relaxing)
- .eh_frame      0x00000000c0106d00      0x2c0 ext2.o
+ .eh_frame      0x00000000c0106d0c      0x2c0 ext2.o
                                         0x2d8 (size before relaxing)
- .eh_frame      0x00000000c0106fc0      0x2bc fat32.o
+ .eh_frame      0x00000000c0106fcc      0x2bc fat32.o
                                         0x2d4 (size before relaxing)
- .eh_frame      0x00000000c010727c       0x40 gdt.o
+ .eh_frame      0x00000000c0107288       0x40 gdt.o
                                          0x58 (size before relaxing)
- .eh_frame      0x00000000c01072bc      0x178 heap.o
+ .eh_frame      0x00000000c01072c8      0x178 heap.o
                                         0x190 (size before relaxing)
- .eh_frame      0x00000000c0107434       0x40 idt.o
+ .eh_frame      0x00000000c0107440       0x40 idt.o
                                          0x58 (size before relaxing)
- .eh_frame      0x00000000c0107474       0xa0 irq.o
+ .eh_frame      0x00000000c0107480       0xa0 irq.o
                                          0xb8 (size before relaxing)
- .eh_frame      0x00000000c0107514       0x8c isr.o
+ .eh_frame      0x00000000c0107520       0x8c isr.o
                                          0xa4 (size before relaxing)
- .eh_frame      0x00000000c01075a0       0x40 keyboard.o
+ .eh_frame      0x00000000c01075ac       0x40 keyboard.o
                                          0x58 (size before relaxing)
- .eh_frame      0x00000000c01075e0       0x88 kmain.o
+ .eh_frame      0x00000000c01075ec       0x88 kmain.o
                                          0xa0 (size before relaxing)
- .eh_frame      0x00000000c0107668       0x5c paging.o
+ .eh_frame      0x00000000c0107674       0x5c paging.o
                                          0x74 (size before relaxing)
- .eh_frame      0x00000000c01076c4       0xa4 pci.o
+ .eh_frame      0x00000000c01076d0       0xa4 pci.o
                                          0xbc (size before relaxing)
- .eh_frame      0x00000000c0107768       0x60 pit.o
+ .eh_frame      0x00000000c0107774       0x60 pit.o
                                          0x78 (size before relaxing)
- .eh_frame      0x00000000c01077c8       0xc0 shell.o
+ .eh_frame      0x00000000c01077d4       0xc0 shell.o
                                          0xd8 (size before relaxing)
- .eh_frame      0x00000000c0107888      0x280 stdio.o
+ .eh_frame      0x00000000c0107894      0x280 stdio.o
                                         0x298 (size before relaxing)
- .eh_frame      0x00000000c0107b08       0x20 syscall.o
+ .eh_frame      0x00000000c0107b14       0x20 syscall.o
                                          0x38 (size before relaxing)
- .eh_frame      0x00000000c0107b28      0x1c0 tasking.o
+ .eh_frame      0x00000000c0107b34      0x1c0 tasking.o
                                         0x1d8 (size before relaxing)
 
-.rodata         0x00000000c0107ce8      0xc66 load address 0x0000000000107ce8
- .rodata        0x00000000c0107ce8       0x7a ehci.o
- *fill*         0x00000000c0107d62        0x2 
- .rodata        0x00000000c0107d64       0x5a ext2.o
- *fill*         0x00000000c0107dbe        0x2 
- .rodata        0x00000000c0107dc0       0x6a fat32.o
- *fill*         0x00000000c0107e2a        0x2 
- .rodata        0x00000000c0107e2c       0x93 heap.o
- *fill*         0x00000000c0107ebf        0x1 
- .rodata        0x00000000c0107ec0      0x144 isr.o
- .rodata        0x00000000c0108004      0x16c kmain.o
- .rodata        0x00000000c0108170       0x94 paging.o
- .rodata        0x00000000c0108204      0x230 pci.o
- .rodata        0x00000000c0108434      0x3b9 shell.o
- *fill*         0x00000000c01087ed        0x3 
- .rodata        0x00000000c01087f0       0x75 stdio.o
- .rodata        0x00000000c0108865       0x10 syscall.o
- *fill*         0x00000000c0108875        0x3 
- .rodata        0x00000000c0108878       0xd6 tasking.o
+.rodata         0x00000000c0107cf4      0xc66 load address 0x0000000000107cf4
+ .rodata        0x00000000c0107cf4       0x7a ehci.o
+ *fill*         0x00000000c0107d6e        0x2 
+ .rodata        0x00000000c0107d70       0x5a ext2.o
+ *fill*         0x00000000c0107dca        0x2 
+ .rodata        0x00000000c0107dcc       0x6a fat32.o
+ *fill*         0x00000000c0107e36        0x2 
+ .rodata        0x00000000c0107e38       0x93 heap.o
+ *fill*         0x00000000c0107ecb        0x1 
+ .rodata        0x00000000c0107ecc      0x144 isr.o
+ .rodata        0x00000000c0108010      0x16c kmain.o
+ .rodata        0x00000000c010817c       0x94 paging.o
+ .rodata        0x00000000c0108210      0x230 pci.o
+ .rodata        0x00000000c0108440      0x3b9 shell.o
+ *fill*         0x00000000c01087f9        0x3 
+ .rodata        0x00000000c01087fc       0x75 stdio.o
+ .rodata        0x00000000c0108871       0x10 syscall.o
+ *fill*         0x00000000c0108881        0x3 
+ .rodata        0x00000000c0108884       0xd6 tasking.o
 
-.rel.dyn        0x00000000c0108950        0x0 load address 0x0000000000108950
- .rel.iplt      0x00000000c0108950        0x0 ata.o
- .rel.text      0x00000000c0108950        0x0 ata.o
- .rel.data      0x00000000c0108950        0x0 ata.o
+.rel.dyn        0x00000000c010895c        0x0 load address 0x000000000010895c
+ .rel.iplt      0x00000000c010895c        0x0 ata.o
+ .rel.text      0x00000000c010895c        0x0 ata.o
+ .rel.data      0x00000000c010895c        0x0 ata.o
 
 .data           0x00000000c0109000     0x2058 load address 0x0000000000109000
  *(.data)
