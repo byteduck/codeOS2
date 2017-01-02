@@ -54,6 +54,15 @@ process_t *createProcess(char *name, uint32_t loc){
 	return p;
 }
 
+process_t *getProcess(uint32_t pid){
+	process_t *current = kernel_proc;
+	do{
+		if(current->pid == pid) return current;
+		current = current->next;
+	}while(current != kernel_proc);
+	return NULL;
+}
+
 void printTasks(){
 	process_t *current = kernel_proc;
 	printf("Running processes: (PID, name, state, * = is current)\n");
@@ -125,7 +134,7 @@ process_t *getCurrentProcess(){
 	return current_proc;
 }
 
-void addProcess(process_t *p){
+uint32_t addProcess(process_t *p){
 	bool en = tasking_enabled;
 	tasking_enabled = false;
 	p->next = current_proc->next;
@@ -133,10 +142,23 @@ void addProcess(process_t *p){
 	p->prev = current_proc;
 	current_proc->next = p;
 	tasking_enabled = en;
+	return p->pid;
 }
 
 void notify(uint32_t sig){
 	current_proc->notify(sig);
+}
+
+void kill(process_t *p){
+	if(getProcess(p->pid) != NULL){
+		tasking_enabled = false;
+		kfree((uint8_t *)p->stack,4096);
+		kfree(p, sizeof(process_t));
+		p->prev->next = p->next;
+		p->next->prev = p->prev;
+		p->state = PROCESS_DEAD;
+		tasking_enabled = true;
+	}
 }
 
 void preempt(){

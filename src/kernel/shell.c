@@ -24,6 +24,10 @@ void initShell(filesystem_t *fsp){
 	dirbuf[1] = '\0';
 }
 
+void dummy(){
+	while(1);
+}
+
 void shell(){
 	while(!exitShell){
 		printf("codeOS2:%s$ ", dirbuf);
@@ -40,6 +44,30 @@ void shell(){
 		command_eval(cmdbuf, argbuf);
 		setColor(0x0f);
 	}
+	__kill__();
+}
+
+uint8_t prog[0x1000];
+
+void progx(){
+	exec(prog);
+}
+
+bool findAndExecute(char *cmd, bool wait){
+	file_t *file = kmalloc(sizeof(file_t));
+	if(fs->getFile(cmd, file, fs) && !file->isDirectory){
+		if(file->sectors*512 > 0x1000)
+			printf("Executable too large.\n");
+		else{
+			fs->read(file, prog, fs);
+			process_t *proc = createProcess(cmd, (uint32_t)progx);
+			uint32_t pid = addProcess(proc);
+			while(wait && proc->state == PROCESS_ALIVE);
+		}
+		kfree(file, sizeof(file_t));
+		return true;
+	}
+	return false;
 }
 
 static void command_eval(char *cmd, char *args){
@@ -54,6 +82,9 @@ static void command_eval(char *cmd, char *args){
 		//println("partinfo: Prints information about the current partition.");
 		println("pagefault: Triggers a page fault, in case you wanted to.");
 		println("tasks: Prints all running tasks.");
+		println("bg: Run a program in the background.");
+		println("kill: Kill a program.");
+		println("dummy: Create a dummy process.");
 		println("exit: Pretty self explanatory.");
 	}else if(strcmp(cmd,"ls")){
 		if(strcmp(args,"")){
@@ -121,14 +152,21 @@ static void command_eval(char *cmd, char *args){
 		exitShell = true;
 	}else if(strcmp(cmd,"tasks")){
 		printTasks();
+	}else if(strcmp(cmd,"bg")){
+		if(strcmp(args,"") || !findAndExecute(args, false)) printf("Cannot find \"%s\".\n", args);
+	}else if(strcmp(cmd,"kill")){
+		uint32_t pid = strToInt(args);
+		process_t *proc = getProcess(pid);
+		if(proc != NULL && proc->pid != 1){
+			kill(proc);
+			printf("Sent SIGTERM (%d) to %s (PID %d).\n", SIGTERM, proc->name, proc->pid);
+		}else if(proc->pid == 1)
+			printf("Cannot kill kernel!\n");
+		else
+			printf("No process with PID %d.\n", pid);
+	}else if(strcmp(cmd, "dummy")){
+		addProcess(createProcess("dummy", (uint32_t)dummy));
 	}else{
-		/*fat32file f = getFile(cmd);
-		if(exists(f) && !isDirectory(f))
-			executeFile(f);
-		else{*/
-			print("\"");
-			print(cmd);
-			println("\" is not a recognized command, file, or program.");
-		//}
+		if(!findAndExecute(cmd, true)) printf("\"%s\" is not a recognized command, file, or program.\n", cmd);
 	}
 }

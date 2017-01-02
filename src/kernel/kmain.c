@@ -63,6 +63,8 @@ int kmain(uint32_t mbootptr){
 void kmain_late(){
 	initShell(&fs);
 	addProcess(createProcess("shell",(uint32_t)shell));
+	while(getProcess(2));
+	printf("\n\nShell exited.\n\n");
 	while(1);
 	PANIC("Kernel process stopped!","That should not happen.",true);
 	__kill__();

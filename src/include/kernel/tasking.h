@@ -25,15 +25,17 @@ typedef struct process_t{
 
 void initTasking();
 void printTasks();
-void addProcess(process_t *p);
+uint32_t addProcess(process_t *p);
 process_t *getCurrentProcess();
 void __init__();
 void preempt_now();
 void __kill__();
 void __notify__(uint32_t sig);
 process_t *createProcess(char *name,  uint32_t loc);
+process_t *getProcess(uint32_t pid);
 void preempt();
 void notify(uint32_t sig);
+void kill(process_t *p);
 
 extern void _iret();
 
