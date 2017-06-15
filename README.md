@@ -16,9 +16,9 @@ You can also use the .img file directly with qemu.
 ## Goals (~~crossed out~~ means completed)
 
 * ~~Fat32 and Ext2 support (Once implemented, Ext2 will be the main filesystem.)~~
- * Ext2 is now the main filesystem.
+    * Ext2 is now the main filesystem.
 * Be able to run executables
- * It kinda can at the moment, but they are loaded into a designated area of memory and run in kernel space.
+    * It kinda can at the moment, but they are loaded into a designated area of memory and run in kernel space.
 * VGA Driver(?)
 * User mode
 * Shell and shell scripts
