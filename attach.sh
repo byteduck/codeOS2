@@ -5,14 +5,22 @@ then
 else
 	if [ "$1" == "-a" ]
 	then
-		sudo losetup /dev/loop0 codeos2.img
-		sudo losetup /dev/loop1 codeos2.img -o 1048576
-		echo "Attached!"
+		sudo losetup -f > loops
+		sudo losetup -f codeos2.img
+		sudo losetup -f >> loops
+		sudo losetup -f codeos2.img -o 1048576
+		readarray loops < loops
+		sudo mount ${loops[1]} /media/${USER}/codeOS2 -o sync
+		echo "Attached! Loops:"
+		cat loops
 	elif [ "$1" == "-d" ]
 	then
-		sudo losetup -d /dev/loop0
-		sudo losetup -d /dev/loop1
-		echo "Detached! (If there's an error, make sure to unmount disk first)"
+		readarray loops < loops
+		sudo umount ${loops[1]}
+		sudo losetup -d ${loops[0]}
+		sudo losetup -d ${loops[1]}
+		> loops
+		echo "Detached!"
 	else
 		echo "Invalid argument $1!"
 	fi

@@ -1,2 +1,2 @@
 #!/bin/bash
-sudo cp -a out/disk/. /media/aaron/codeOS2/
+sudo cp -a out/disk/. /media/${USER}/codeOS2/
