@@ -25,11 +25,6 @@ You can also use the .img file directly with qemu.
 * At least partial POSIX compliance (someday...)
  * I'm not sure if I'm going to make it directly POSIX compatible, or have a compatibility layer for POSIX applications. It might just be easier to make it directly (partially) POSIX compatible.
 
-Original CodeOS: http://www.github.com/Codepixl/CodeOS
-
-My YouTube channel:
-https://www.youtube.com/codepixl
-
 # Compile
 Make a new folder called out, and in that a folder called disk.
 Use make to compile, and then you will have to take all of the directories and files in out/disk and copy them to a drive with GRUB2 installed. Then use the multiboot2 command in grub with the file codeos2/system/krnl32.
